@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>簿記3級 2ヶ月習慣化トラッカー</title>
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --card: #ffffff;
+    --accent: #2e7d5b;
+    --accent-light: #e5f1ea;
+    --accent-dark: #1f5a40;
+    --warn: #d97706;
+    --watch: #6366f1;
+    --watch-light: #eef2ff;
+    --text: #2c2c2c;
+    --muted: #7a7a7a;
+    --border: #e4e2dc;
+    --done: #4caf50;
+    --today: #ffb703;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: white;
+    padding: 28px 20px 24px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+  header.watch-mode {
+    background: linear-gradient(135deg, var(--watch) 0%, #4338ca 100%);
+  }
+  header h1 { margin: 0 0 6px; font-size: 1.6rem; letter-spacing: 0.02em; }
+  header p { margin: 0; opacity: 0.9; font-size: 0.9rem; }
+  .mode-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 99px;
+    font-size: 0.7rem;
+    margin-top: 6px;
+  }
+  main { max-width: 960px; margin: 0 auto; padding: 20px 16px 60px; }
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid var(--border);
+  }
+  .card h2 {
+    margin: 0 0 14px;
+    font-size: 1.1rem;
+    color: var(--accent-dark);
+    border-left: 4px solid var(--accent);
+    padding-left: 10px;
+  }
+  body.watch-mode .card h2 {
+    color: #4338ca;
+    border-left-color: var(--watch);
+  }
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .stat {
+    background: var(--card);
+    padding: 16px 12px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .stat .label { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
+  .stat .value { font-size: 1.7rem; font-weight: bold; color: var(--accent-dark); }
+  body.watch-mode .stat .value { color: #4338ca; }
+  .stat .unit { font-size: 0.75rem; color: var(--muted); margin-left: 2px; }
+  .setup { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .setup label { font-size: 0.9rem; color: var(--muted); }
+  .setup input[type="date"], .setup input[type="text"] {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: inherit;
+  }
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  button:hover { background: var(--accent-dark); }
+  body.watch-mode button { background: var(--watch); }
+  body.watch-mode button:hover { background: #4338ca; }
+  button.secondary {
+    background: white;
+    color: var(--accent-dark);
+    border: 1px solid var(--accent);
+  }
+  button.secondary:hover { background: var(--accent-light); }
+  body.watch-mode button.secondary {
+    color: #4338ca;
+    border-color: var(--watch);
+  }
+  body.watch-mode button.secondary:hover { background: var(--watch-light); }
+  button.warn {
+    background: transparent;
+    color: var(--warn);
+    border: 1px solid var(--warn);
+    font-size: 0.8rem;
+    padding: 4px 10px;
+  }
+  button.warn:hover { background: #fdf2e4; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .today-card {
+    background: linear-gradient(135deg, var(--accent-light) 0%, #f0f7f3 100%);
+    border: 2px solid var(--accent);
+  }
+  body.watch-mode .today-card {
+    background: linear-gradient(135deg, var(--watch-light) 0%, #f5f3ff 100%);
+    border-color: var(--watch);
+  }
+  .today-title { font-size: 1.2rem; color: var(--accent-dark); margin-bottom: 6px; font-weight: bold; }
+  body.watch-mode .today-title { color: #4338ca; }
+  .today-desc { color: #444; margin-bottom: 14px; font-size: 0.95rem; }
+  .today-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .resources { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+  .res-link {
+    display: block;
+    padding: 12px 14px;
+    background: var(--accent-light);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--accent-dark);
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+  }
+  body.watch-mode .res-link { background: var(--watch-light); color: #4338ca; }
+  .res-link:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .res-link .ico { font-size: 1.1rem; margin-right: 6px; }
+  .res-link .desc { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .calendar { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; }
+  @media (max-width: 600px) { .calendar { grid-template-columns: repeat(7, 1fr); } }
+  .day-cell {
+    aspect-ratio: 1;
+    background: #eee;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: #666;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .day-cell:hover { transform: scale(1.08); }
+  body.watch-mode .day-cell { cursor: default; }
+  body.watch-mode .day-cell:hover { transform: none; }
+  .day-cell.done { background: var(--done); color: white; }
+  .day-cell.today { border-color: var(--today); box-shadow: 0 0 0 2px rgba(255,183,3,0.3); }
+  .day-cell.future { opacity: 0.4; cursor: default; }
+  .day-cell.future:hover { transform: none; }
+  .day-num { font-weight: bold; font-size: 0.85rem; }
+  .day-phase { font-size: 0.55rem; opacity: 0.8; }
+  .phase-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; font-size: 0.75rem; color: var(--muted); }
+  .phase-legend span.dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .plan-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .plan-table th, .plan-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .plan-table th {
+    background: var(--accent-light);
+    color: var(--accent-dark);
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+  body.watch-mode .plan-table th { background: var(--watch-light); color: #4338ca; }
+  .plan-table tr.done-row td { color: var(--muted); text-decoration: line-through; }
+  .plan-table tr.today-row { background: #fff8e1; }
+  .plan-check { width: 22px; height: 22px; cursor: pointer; }
+  .log-entry { display: flex; gap: 10px; flex-wrap: wrap; }
+  .log-entry textarea {
+    flex: 1;
+    min-height: 60px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+  }
+  .log-list { max-height: 280px; overflow-y: auto; margin-top: 12px; }
+  .log-item {
+    padding: 10px 12px;
+    background: #fafafa;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    font-size: 0.88rem;
+  }
+  .log-item .log-date { font-size: 0.75rem; color: var(--muted); margin-bottom: 2px; }
+  .quote { text-align: center; font-style: italic; color: var(--muted); font-size: 0.9rem; padding: 12px 0; }
+  .progress-bar-wrap { height: 10px; background: #eee; border-radius: 5px; overflow: hidden; margin-top: 8px; }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent) 0%, #8bc34a 100%);
+    transition: width 0.5s ease;
+  }
+  body.watch-mode .progress-bar { background: linear-gradient(90deg, var(--watch) 0%, #a78bfa 100%); }
+  details { margin-top: 8px; }
+  details summary { cursor: pointer; color: var(--accent-dark); font-size: 0.9rem; padding: 4px 0; }
+  body.watch-mode details summary { color: #4338ca; }
+  .actions-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .flame { font-size: 1.1rem; }
+  /* Setup screen */
+  #setupScreen {
+    max-width: 500px;
+    margin: 60px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  #setupScreen h1 { margin-top: 0; color: var(--accent-dark); }
+  #setupScreen input { width: 100%; padding: 10px; font-size: 1rem; margin: 6px 0 14px; border: 1px solid var(--border); border-radius: 6px; }
+  .share-url { padding: 10px; background: #f5f5f5; border-radius: 6px; word-break: break-all; font-size: 0.85rem; font-family: monospace; }
+  .copy-btn { margin-left: 6px; padding: 3px 10px; font-size: 0.75rem; }
+  /* Encouragement */
+  .enc-item {
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #fff4e0 0%, #ffe9cc 100%);
+    border-radius: 10px;
+    border-left: 4px solid var(--today);
+    font-size: 0.95rem;
+  }
+  .enc-item .enc-meta { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; }
+  .enc-item.new { box-shadow: 0 0 0 2px var(--today); }
+  .enc-preset { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+  .enc-preset button {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    background: var(--watch-light);
+    color: #4338ca;
+    border: 1px solid var(--watch);
+  }
+  .enc-preset button:hover { background: var(--watch); color: white; }
+  .status-row {
+    display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
+    padding: 10px 14px; background: #f9fafb; border-radius: 8px;
+    font-size: 0.88rem;
+  }
+  .status-item strong { color: var(--accent-dark); }
+  body.watch-mode .status-item strong { color: #4338ca; }
+  .last-active { font-weight: bold; }
+  .last-active.ok { color: var(--done); }
+  .last-active.warn { color: var(--warn); }
+  .last-active.bad { color: #c62828; }
+  .loading { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .loading::after {
+    content: '';
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid var(--accent);
+    border-top-color: transparent;
+    border-radius: 50%;
+    margin-left: 10px;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .hidden { display: none !important; }
+  .firebase-error {
+    max-width: 600px; margin: 40px auto; padding: 20px; background: #fef2f2; border: 1px solid #fecaca;
+    border-radius: 8px; color: #991b1b;
+  }
+</style>
+</head>
+<body>
+
+<!-- ローディング -->
+<div id="loadingScreen" class="loading">読み込み中</div>
+
+<!-- Firebase未設定エラー -->
+<div id="firebaseErrorScreen" class="firebase-error hidden">
+  <h2>⚠️ Firebaseの設定が必要です</h2>
+  <p>index.htmlの下部にあるscriptタグ内の <code>firebaseConfig</code> にあなたのFirebaseプロジェクト設定を貼り付けてください。詳細は同梱のSETUP.mdを参照してください。</p>
+</div>
+
+<!-- セットアップ画面（初回） -->
+<div id="setupScreen" class="hidden">
+  <h1>📚 簿記3級トラッカー</h1>
+  <p>はじめての利用ですか？</p>
+  <button onclick="createTracker()">✨ 新しくトラッカーを作成する</button>
+  <p style="margin-top:20px;color:var(--muted);">既存のトラッカーIDを入力:</p>
+  <input type="text" id="existingIdInput" placeholder="tracker-xxxxx" />
+  <button class="secondary" onclick="useExistingId()">このIDで続ける</button>
+</div>
+
+<!-- メインアプリ -->
+<div id="app" class="hidden">
+  <header id="mainHeader">
+    <h1 id="headerTitle">📚 簿記3級 2ヶ月習慣化トラッカー</h1>
+    <p id="headerSub">ふくしままさゆき先生の動画 × 犬簿記の過去問で合格へ</p>
+    <div id="modeBadge" class="mode-badge"></div>
+  </header>
+
+  <main>
+    <!-- 見守りモード用 ステータス -->
+    <div class="card hidden" id="watchStatusCard">
+      <h2>🛡 見守りモード</h2>
+      <div class="status-row">
+        <div class="status-item">最終更新: <strong class="last-active" id="lastActive">—</strong></div>
+        <div class="status-item">今日の学習: <strong id="todayDone">—</strong></div>
+      </div>
+    </div>
+
+    <!-- 開始日設定（edit mode only） -->
+    <div class="card" id="setupCard">
+      <h2>⚙️ 学習開始日の設定</h2>
+      <div class="setup">
+        <label for="startDate">開始日:</label>
+        <input type="date" id="startDate">
+        <button onclick="setStartDate()">設定する</button>
+        <button class="secondary" onclick="setToday()">今日から開始</button>
+        <span id="startInfo" style="color:var(--muted);font-size:0.85rem;"></span>
+      </div>
+    </div>
+
+    <!-- ダッシュボード -->
+    <div class="dashboard">
+      <div class="stat">
+        <div class="label">経過日数</div>
+        <div class="value"><span id="elapsed">0</span><span class="unit">/60日</span></div>
+      </div>
+      <div class="stat">
+        <div class="label">完了日数</div>
+        <div class="value"><span id="completed">0</span><span class="unit">日</span></div>
+      </div>
+      <div class="stat">
+        <div class="label">連続日数 <span class="flame">🔥</span></div>
+        <div class="value"><span id="streak">0</span><span class="unit">日</span></div>
+      </div>
+      <div class="stat">
+        <div class="label">達成率</div>
+        <div class="value"><span id="rate">0</span><span class="unit">%</span></div>
+      </div>
+    </div>
+
+    <!-- 今日のタスク -->
+    <div class="card today-card">
+      <h2>🎯 今日のタスク</h2>
+      <div id="todayBox">
+        <p class="today-desc">開始日を設定してください。</p>
+      </div>
+    </div>
+
+    <!-- 全体進捗 -->
+    <div class="card">
+      <h2>📊 全体進捗</h2>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar" style="width:0%"></div>
+      </div>
+      <p style="margin:8px 0 0;font-size:0.85rem;color:var(--muted);"><span id="progressText">進捗: 0/60日</span></p>
+    </div>
+
+    <!-- 応援メッセージ（見守りモードは送信、edit modeは受信表示） -->
+    <div class="card" id="encCard">
+      <h2>💌 応援メッセージ</h2>
+      <div id="encSender" class="hidden">
+        <p style="font-size:0.88rem;color:var(--muted);margin:0 0 6px;">妹さんに応援の一言を送ろう</p>
+        <div class="enc-preset">
+          <button onclick="sendPreset('今日もがんばって！🔥')">今日もがんばって！🔥</button>
+          <button onclick="sendPreset('ナイス継続！👏')">ナイス継続！👏</button>
+          <button onclick="sendPreset('一歩一歩で大丈夫💪')">一歩一歩で大丈夫💪</button>
+          <button onclick="sendPreset('勉強してるのえらい！')">勉強してるのえらい！</button>
+        </div>
+        <textarea id="encText" placeholder="自由にメッセージを..." style="width:100%;min-height:50px;padding:8px;border:1px solid var(--border);border-radius:6px;font-family:inherit;"></textarea>
+        <div style="margin-top:8px;">
+          <button onclick="sendEncouragement()">📨 送信する</button>
+        </div>
+      </div>
+      <div id="encList" style="margin-top:12px;"></div>
+    </div>
+
+    <!-- カレンダー -->
+    <div class="card">
+      <h2>📅 60日カレンダー</h2>
+      <p style="font-size:0.85rem;color:var(--muted);margin-top:-6px;" id="calHint">クリックで完了/未完了を切り替え</p>
+      <div class="calendar" id="calendar"></div>
+      <div class="phase-legend">
+        <div><span class="dot" style="background:#c8e6c9"></span>Phase 1: 基礎（Day 1-14）</div>
+        <div><span class="dot" style="background:#a5d6a7"></span>Phase 2: 各論（Day 15-28）</div>
+        <div><span class="dot" style="background:#81c784"></span>Phase 3: 決算（Day 29-42）</div>
+        <div><span class="dot" style="background:#4caf50"></span>Phase 4: 過去問（Day 43-60）</div>
+      </div>
+    </div>
+
+    <!-- 学習プラン -->
+    <div class="card">
+      <h2>🗓 2ヶ月学習プラン</h2>
+      <details>
+        <summary>学習計画表を見る</summary>
+        <div style="overflow-x:auto;margin-top:10px;">
+          <table class="plan-table" id="planTable"></table>
+        </div>
+      </details>
+    </div>
+
+    <!-- リソース -->
+    <div class="card">
+      <h2>🔗 学習リソース</h2>
+      <div class="resources">
+        <a class="res-link" href="https://www.youtube.com/@bokisimasyo/playlists" target="_blank" rel="noopener">
+          <span class="ico">🎥</span><strong>ふくしままさゆき先生のYouTube</strong>
+          <div class="desc">簿記3級解説動画プレイリスト</div>
+        </a>
+        <a class="res-link" href="https://inuboki.com/" target="_blank" rel="noopener">
+          <span class="ico">🐕</span><strong>犬簿記（いぬぼき）</strong>
+          <div class="desc">過去問・予想問題を解く</div>
+        </a>
+        <a class="res-link" href="https://www.kentei.ne.jp/bookkeeping" target="_blank" rel="noopener">
+          <span class="ico">📝</span><strong>日商簿記 公式サイト</strong>
+          <div class="desc">試験日程・申込情報</div>
+        </a>
+        <a class="res-link" href="https://cbt-s.com/examinee/examination/jcci" target="_blank" rel="noopener">
+          <span class="ico">💻</span><strong>ネット試験（CBT）申込</strong>
+          <div class="desc">随時受験できる試験</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- 学習ログ -->
+    <div class="card" id="logCard">
+      <h2>📝 学習メモ</h2>
+      <div id="logEntryBox">
+        <div class="log-entry">
+          <textarea id="logText" placeholder="今日学んだこと、わからなかった論点、気づきなどを書きましょう..."></textarea>
+        </div>
+        <div class="actions-row">
+          <button onclick="saveLog()">メモを保存</button>
+        </div>
+      </div>
+      <div class="log-list" id="logList"></div>
+    </div>
+
+    <!-- 共有URL（edit mode only） -->
+    <div class="card" id="shareCard">
+      <h2>🔗 共有URL</h2>
+      <p style="font-size:0.85rem;color:var(--muted);">見守り役の人にこのURLを送ってください：</p>
+      <div class="share-url" id="shareUrl"></div>
+      <button class="copy-btn secondary" onclick="copyShareUrl()">コピー</button>
+    </div>
+
+    <!-- 名言 -->
+    <div class="quote" id="quote">「継続は力なり」—今日の一歩が合格につながる—</div>
+
+    <!-- リセット -->
+    <div class="actions-row" style="justify-content:center;margin-top:20px;" id="resetRow">
+      <button class="warn" onclick="resetAll()">⚠️ 進捗をリセット</button>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+import { getFirestore, doc, setDoc, onSnapshot, updateDoc, arrayUnion, getDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+import { getAuth, signInAnonymously, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+
+/* =======================================================
+   🔥 ここにFirebaseコンソールから取得した設定を貼り付けてください
+   ======================================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyDhf-cb_CSz9d5B4jewEjJf5RT-pxDJgRE",
+  authDomain: "boki3-tracker.firebaseapp.com",
+  projectId: "boki3-tracker",
+  storageBucket: "boki3-tracker.firebasestorage.app",
+  messagingSenderId: "86514151675",
+  appId: "1:86514151675:web:b3b716149ce3c526b7405e",
+  measurementId: "G-L65N6D6WV8"
+};
+/* ======================================================= */
+
+// Firebase設定が未記入ならエラー画面を表示
+if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+  document.getElementById('loadingScreen').classList.add('hidden');
+  document.getElementById('firebaseErrorScreen').classList.remove('hidden');
+  throw new Error("Firebase config not set");
+}
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+/* ========= プラン（60日分） ========= */
+const PLAN = [
+  { day: 1, phase: 1, topic: "ガイダンス・簿記の全体像", detail: "ふくしま先生: 簿記とは何か／複式簿記の基礎", target: "動画視聴（概要回）" },
+  { day: 2, phase: 1, topic: "仕訳の基本ルール", detail: "借方・貸方／5要素（資産・負債・純資産・収益・費用）", target: "動画視聴＋ノート整理" },
+  { day: 3, phase: 1, topic: "現金・預金取引", detail: "現金／普通預金／当座預金／小口現金", target: "動画視聴＋例題" },
+  { day: 4, phase: 1, topic: "現金過不足", detail: "現金過不足の仕訳処理", target: "動画視聴＋例題" },
+  { day: 5, phase: 1, topic: "商品売買①（三分法）", detail: "仕入・売上・繰越商品", target: "動画視聴＋例題" },
+  { day: 6, phase: 1, topic: "商品売買②", detail: "返品・値引き・諸掛り", target: "動画視聴＋例題" },
+  { day: 7, phase: 1, topic: "【復習日】Day1-6の総復習", detail: "仕訳をもう一度解く", target: "手を動かして定着" },
+  { day: 8, phase: 1, topic: "売掛金・買掛金", detail: "掛取引と補助元帳", target: "動画視聴＋例題" },
+  { day: 9, phase: 1, topic: "手形取引", detail: "約束手形／受取・支払手形", target: "動画視聴＋例題" },
+  { day: 10, phase: 1, topic: "電子記録債権・債務", detail: "電子記録の仕訳", target: "動画視聴＋例題" },
+  { day: 11, phase: 1, topic: "その他債権債務", detail: "貸付金／借入金／未収入金／未払金／前払金／前受金", target: "動画視聴＋例題" },
+  { day: 12, phase: 1, topic: "仮払金・仮受金・立替金・預り金", detail: "一時的な勘定科目", target: "動画視聴＋例題" },
+  { day: 13, phase: 1, topic: "クレジット売掛金・ICカード", detail: "新しめの論点", target: "動画視聴＋例題" },
+  { day: 14, phase: 1, topic: "【総復習日】Phase1まとめ", detail: "Day1-13の仕訳を全部見直す", target: "苦手論点の洗い出し" },
+  { day: 15, phase: 2, topic: "有形固定資産①", detail: "取得・付随費用", target: "動画視聴＋例題" },
+  { day: 16, phase: 2, topic: "有形固定資産②（減価償却）", detail: "定額法／間接法", target: "動画視聴＋例題" },
+  { day: 17, phase: 2, topic: "有形固定資産③（売却）", detail: "固定資産売却益・損", target: "動画視聴＋例題" },
+  { day: 18, phase: 2, topic: "貸倒れ・貸倒引当金", detail: "差額補充法", target: "動画視聴＋例題" },
+  { day: 19, phase: 2, topic: "資本金・引出金", detail: "株式会社の資本", target: "動画視聴＋例題" },
+  { day: 20, phase: 2, topic: "租税公課・消費税", detail: "税金の処理", target: "動画視聴＋例題" },
+  { day: 21, phase: 2, topic: "【復習日】Day15-20の総復習", detail: "仕訳を解き直す", target: "手を動かして定着" },
+  { day: 22, phase: 2, topic: "伝票会計①", detail: "3伝票制", target: "動画視聴＋例題" },
+  { day: 23, phase: 2, topic: "伝票会計②", detail: "仕訳日計表", target: "動画視聴＋例題" },
+  { day: 24, phase: 2, topic: "帳簿①（主要簿）", detail: "仕訳帳／総勘定元帳", target: "動画視聴＋例題" },
+  { day: 25, phase: 2, topic: "帳簿②（補助簿）", detail: "商品有高帳／現金出納帳 等", target: "動画視聴＋例題" },
+  { day: 26, phase: 2, topic: "試算表①", detail: "合計試算表／残高試算表", target: "動画視聴＋例題" },
+  { day: 27, phase: 2, topic: "試算表②", detail: "T勘定を使って解く練習", target: "例題を多めに" },
+  { day: 28, phase: 2, topic: "【総復習日】Phase2まとめ", detail: "Day15-27の仕訳を見直す", target: "苦手論点の再確認" },
+  { day: 29, phase: 3, topic: "決算整理① 現金過不足", detail: "雑損・雑益への振替", target: "動画視聴＋例題" },
+  { day: 30, phase: 3, topic: "決算整理② 売上原価", detail: "仕入or売上原価で計算", target: "動画視聴＋例題" },
+  { day: 31, phase: 3, topic: "決算整理③ 貸倒引当金", detail: "期末設定", target: "動画視聴＋例題" },
+  { day: 32, phase: 3, topic: "決算整理④ 減価償却", detail: "期末の計上", target: "動画視聴＋例題" },
+  { day: 33, phase: 3, topic: "決算整理⑤ 経過勘定", detail: "前払／前受／未払／未収", target: "動画視聴＋例題" },
+  { day: 34, phase: 3, topic: "決算整理⑥ 貯蔵品・消費税", detail: "期末処理", target: "動画視聴＋例題" },
+  { day: 35, phase: 3, topic: "【復習日】決算整理まとめ", detail: "Day29-34の総復習", target: "例題10問以上" },
+  { day: 36, phase: 3, topic: "精算表①", detail: "精算表の構造を理解", target: "動画視聴＋例題" },
+  { day: 37, phase: 3, topic: "精算表②", detail: "精算表を1枚完成させる", target: "例題1枚" },
+  { day: 38, phase: 3, topic: "精算表③", detail: "時間を計って解く", target: "例題2枚" },
+  { day: 39, phase: 3, topic: "財務諸表①", detail: "損益計算書(P/L)", target: "動画視聴＋例題" },
+  { day: 40, phase: 3, topic: "財務諸表②", detail: "貸借対照表(B/S)", target: "動画視聴＋例題" },
+  { day: 41, phase: 3, topic: "決算整理後残高試算表", detail: "後T/Bの作成練習", target: "例題を解く" },
+  { day: 42, phase: 3, topic: "【総復習日】Phase3まとめ", detail: "決算ひととおり復習", target: "時間制限で練習" },
+  { day: 43, phase: 4, topic: "犬簿記 第1問（仕訳）①", detail: "仕訳15問を制限時間内で", target: "犬簿記で演習" },
+  { day: 44, phase: 4, topic: "犬簿記 第1問（仕訳）②", detail: "間違えた論点の復習", target: "犬簿記で演習" },
+  { day: 45, phase: 4, topic: "犬簿記 第2問（帳簿・補助簿）①", detail: "商品有高帳／勘定記入", target: "犬簿記で演習" },
+  { day: 46, phase: 4, topic: "犬簿記 第2問②", detail: "補助簿・伝票", target: "犬簿記で演習" },
+  { day: 47, phase: 4, topic: "犬簿記 第3問（決算）①", detail: "精算表・財務諸表", target: "犬簿記で演習" },
+  { day: 48, phase: 4, topic: "犬簿記 第3問②", detail: "時間を計って解く", target: "犬簿記で演習" },
+  { day: 49, phase: 4, topic: "【復習日】苦手論点の総洗い出し", detail: "間違えたところを仕訳に戻る", target: "ノートまとめ" },
+  { day: 50, phase: 4, topic: "模擬試験①（本番同様60分）", detail: "犬簿記の予想問題", target: "時間計測＋採点" },
+  { day: 51, phase: 4, topic: "模擬試験①の復習", detail: "間違えた論点を動画で見直し", target: "ふくしま先生の該当回" },
+  { day: 52, phase: 4, topic: "模擬試験②", detail: "本番同様60分", target: "時間計測＋採点" },
+  { day: 53, phase: 4, topic: "模擬試験②の復習", detail: "苦手を潰す", target: "復習重視" },
+  { day: 54, phase: 4, topic: "模擬試験③", detail: "本番同様60分", target: "時間計測＋採点" },
+  { day: 55, phase: 4, topic: "模擬試験③の復習", detail: "苦手を潰す", target: "復習重視" },
+  { day: 56, phase: 4, topic: "仕訳マラソン", detail: "仕訳を30問一気に", target: "反射で解けるレベルに" },
+  { day: 57, phase: 4, topic: "第3問マラソン", detail: "精算表or財務諸表を複数枚", target: "時間と正確さ" },
+  { day: 58, phase: 4, topic: "模擬試験④（最終仕上げ）", detail: "合格点70点以上を目指す", target: "本番モード" },
+  { day: 59, phase: 4, topic: "苦手論点の最終確認", detail: "よく間違える仕訳を再度整理", target: "見直し中心" },
+  { day: 60, phase: 4, topic: "【試験直前】総仕上げ", detail: "自信がない部分の最終チェック", target: "メンタルも整える" }
+];
+
+const QUOTES = [
+  "「継続は力なり」—今日の一歩が合格につながる—",
+  "「千里の道も一歩から」—焦らず着実に—",
+  "「仕訳を制するものは簿記を制す」",
+  "「わからなかったら、もう一度動画を見るだけでいい」",
+  "「昨日の自分より1つ多く仕訳できれば勝ち」",
+  "「過去問は嘘をつかない」",
+  "「手を動かした分だけ、脳に残る」"
+];
+
+/* ========= 状態管理 ========= */
+const params = new URLSearchParams(window.location.search);
+let trackerId = params.get('t') || localStorage.getItem('boki3_tracker_id');
+const isWatch = params.get('watch') === '1';
+let data = { startDate: null, completed: {}, logs: [], encouragements: [], lastActiveAt: null };
+let docRef = null;
+let lastSeenEncCount = 0;
+
+/* ========= 初期化 ========= */
+signInAnonymously(auth).catch(err => {
+  console.error("Auth error:", err);
+  alert("認証エラーが発生しました。Firebase Authentication で「匿名」サインイン方法が有効になっているか確認してください。");
+});
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) return;
+  document.getElementById('loadingScreen').classList.add('hidden');
+  if (!trackerId) {
+    document.getElementById('setupScreen').classList.remove('hidden');
+    return;
+  }
+  localStorage.setItem('boki3_tracker_id', trackerId);
+  startTracker();
+});
+
+async function startTracker() {
+  document.getElementById('app').classList.remove('hidden');
+  if (isWatch) {
+    document.body.classList.add('watch-mode');
+    document.getElementById('mainHeader').classList.add('watch-mode');
+    document.getElementById('headerTitle').textContent = '🛡 妹の簿記3級 見守りモード';
+    document.getElementById('headerSub').textContent = 'リアルタイムで進捗が確認できます';
+    document.getElementById('modeBadge').textContent = '👀 見守りモード（読み取り専用）';
+    document.getElementById('watchStatusCard').classList.remove('hidden');
+    document.getElementById('setupCard').classList.add('hidden');
+    document.getElementById('shareCard').classList.add('hidden');
+    document.getElementById('resetRow').classList.add('hidden');
+    document.getElementById('logEntryBox').classList.add('hidden');
+    document.getElementById('calHint').classList.add('hidden');
+    document.getElementById('encSender').classList.remove('hidden');
+  } else {
+    document.getElementById('modeBadge').textContent = '✏️ 学習モード';
+  }
+
+  docRef = doc(db, 'trackers', trackerId);
+
+  // 既存ドキュメント確認、なければ作成
+  const snap = await getDoc(docRef);
+  if (!snap.exists()) {
+    await setDoc(docRef, {
+      startDate: null, completed: {}, logs: [], encouragements: [], lastActiveAt: null
+    });
+  }
+
+  // 編集モードならアクセスを記録
+  if (!isWatch) {
+    updateDoc(docRef, { lastActiveAt: new Date().toISOString() }).catch(()=>{});
+  }
+
+  // リアルタイム同期
+  onSnapshot(docRef, (snap) => {
+    if (snap.exists()) {
+      data = { startDate: null, completed: {}, logs: [], encouragements: [], ...snap.data() };
+      renderAll();
+      // 見守りモードで新しい応援に未読フラグ
+      if (isWatch) {
+        // noop - sender doesn't need to see unread
+      }
+    }
+  });
+
+  // 共有URLを表示
+  if (!isWatch) {
+    const url = `${window.location.origin}${window.location.pathname}?t=${trackerId}&watch=1`;
+    document.getElementById('shareUrl').textContent = url;
+  }
+}
+
+/* ========= ユーティリティ ========= */
+function fmtDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`;
+}
+function daysBetween(a, b) {
+  const ms = 24*60*60*1000;
+  return Math.floor((b - a) / ms);
+}
+function getTodayDay() {
+  if (!data.startDate) return null;
+  const start = new Date(data.startDate + 'T00:00:00');
+  const today = new Date(fmtDate(new Date()) + 'T00:00:00');
+  const diff = daysBetween(start, today) + 1;
+  if (diff < 1) return 0;
+  if (diff > 60) return 61;
+  return diff;
+}
+function phaseColor(phase) { return ['#c8e6c9','#a5d6a7','#81c784','#4caf50'][phase-1]; }
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function relativeTime(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = (now - d) / 1000;
+  if (diff < 60) return 'たった今';
+  if (diff < 3600) return `${Math.floor(diff/60)}分前`;
+  if (diff < 86400) return `${Math.floor(diff/3600)}時間前`;
+  if (diff < 86400*7) return `${Math.floor(diff/86400)}日前`;
+  return fmtDate(d);
+}
+
+/* ========= Firestore更新関数 ========= */
+async function persist() {
+  if (!docRef) return;
+  await setDoc(docRef, data);
+}
+
+/* ========= セットアップ画面 ========= */
+window.createTracker = async function() {
+  const newId = 'tracker-' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+  trackerId = newId;
+  localStorage.setItem('boki3_tracker_id', newId);
+  const newUrl = `${window.location.pathname}?t=${newId}`;
+  history.replaceState(null, '', newUrl);
+  document.getElementById('setupScreen').classList.add('hidden');
+  document.getElementById('loadingScreen').classList.remove('hidden');
+  await startTracker();
+  document.getElementById('loadingScreen').classList.add('hidden');
+};
+
+window.useExistingId = async function() {
+  const id = document.getElementById('existingIdInput').value.trim();
+  if (!id) return alert('IDを入力してください');
+  trackerId = id;
+  localStorage.setItem('boki3_tracker_id', id);
+  const newUrl = `${window.location.pathname}?t=${id}${isWatch ? '&watch=1' : ''}`;
+  history.replaceState(null, '', newUrl);
+  document.getElementById('setupScreen').classList.add('hidden');
+  document.getElementById('loadingScreen').classList.remove('hidden');
+  await startTracker();
+  document.getElementById('loadingScreen').classList.add('hidden');
+};
+
+/* ========= 編集アクション ========= */
+window.setStartDate = async function() {
+  const input = document.getElementById('startDate');
+  if (input.value) {
+    data.startDate = input.value;
+    await persist();
+  }
+};
+window.setToday = async function() {
+  const today = fmtDate(new Date());
+  document.getElementById('startDate').value = today;
+  data.startDate = today;
+  await persist();
+};
+window.toggleDay = async function(day) {
+  if (isWatch) return;
+  const todayDay = getTodayDay();
+  if (day > todayDay) return;
+  data.completed = data.completed || {};
+  if (data.completed[day]) delete data.completed[day];
+  else data.completed[day] = new Date().toISOString();
+  data.lastActiveAt = new Date().toISOString();
+  await persist();
+};
+window.saveLog = async function() {
+  const txt = document.getElementById('logText').value.trim();
+  if (!txt) return;
+  data.logs = data.logs || [];
+  data.logs.unshift({
+    date: fmtDate(new Date()),
+    time: new Date().toLocaleTimeString('ja-JP', { hour:'2-digit', minute:'2-digit' }),
+    day: getTodayDay(),
+    text: txt,
+    id: Date.now().toString()
+  });
+  if (data.logs.length > 100) data.logs = data.logs.slice(0, 100);
+  data.lastActiveAt = new Date().toISOString();
+  await persist();
+  document.getElementById('logText').value = '';
+};
+window.sendEncouragement = async function() {
+  const txt = document.getElementById('encText').value.trim();
+  if (!txt) return;
+  await sendEncImpl(txt);
+  document.getElementById('encText').value = '';
+};
+window.sendPreset = async function(msg) {
+  await sendEncImpl(msg);
+};
+async function sendEncImpl(txt) {
+  data.encouragements = data.encouragements || [];
+  data.encouragements.unshift({
+    date: fmtDate(new Date()),
+    time: new Date().toLocaleTimeString('ja-JP', { hour:'2-digit', minute:'2-digit' }),
+    text: txt,
+    id: Date.now().toString()
+  });
+  if (data.encouragements.length > 50) data.encouragements = data.encouragements.slice(0, 50);
+  await persist();
+  alert('応援メッセージを送りました！📨');
+}
+window.resetAll = async function() {
+  if (isWatch) return;
+  if (!confirm('すべての進捗・メモをリセットします。よろしいですか？')) return;
+  data = { startDate: null, completed: {}, logs: [], encouragements: [], lastActiveAt: null };
+  await persist();
+};
+window.copyShareUrl = function() {
+  const url = document.getElementById('shareUrl').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    alert('URLをコピーしました！');
+  });
+};
+
+/* ========= レンダリング ========= */
+function renderAll() {
+  renderStartInfo();
+  renderDashboard();
+  renderToday();
+  renderCalendar();
+  renderPlanTable();
+  renderLogs();
+  renderEncouragements();
+  renderQuote();
+  if (isWatch) renderWatchStatus();
+}
+
+function renderStartInfo() {
+  const info = document.getElementById('startInfo');
+  if (data.startDate) {
+    const end = new Date(data.startDate + 'T00:00:00');
+    end.setDate(end.getDate() + 59);
+    info.textContent = `開始日: ${data.startDate} ／ 終了予定: ${fmtDate(end)}`;
+    const sd = document.getElementById('startDate');
+    if (sd) sd.value = data.startDate;
+  } else {
+    info.textContent = '';
+  }
+}
+
+function renderDashboard() {
+  const todayDay = getTodayDay();
+  const elapsed = todayDay === null ? 0 : Math.min(Math.max(todayDay,0), 60);
+  const completedCount = Object.keys(data.completed || {}).length;
+  const rate = elapsed > 0 ? Math.round(completedCount / elapsed * 100) : 0;
+  document.getElementById('elapsed').textContent = elapsed;
+  document.getElementById('completed').textContent = completedCount;
+  document.getElementById('rate').textContent = rate;
+  document.getElementById('streak').textContent = calcStreak();
+  const overallRate = Math.round(completedCount / 60 * 100);
+  document.getElementById('progressBar').style.width = overallRate + '%';
+  document.getElementById('progressText').textContent = `進捗: ${completedCount}/60日 (${overallRate}%)`;
+}
+
+function calcStreak() {
+  if (!data.startDate) return 0;
+  const todayDay = getTodayDay();
+  if (!todayDay) return 0;
+  let streak = 0;
+  let check = (data.completed && data.completed[todayDay]) ? todayDay : todayDay - 1;
+  while (check >= 1 && data.completed && data.completed[check]) {
+    streak++; check--;
+  }
+  return streak;
+}
+
+function renderToday() {
+  const box = document.getElementById('todayBox');
+  if (!data.startDate) {
+    box.innerHTML = isWatch
+      ? '<p class="today-desc">妹さんがまだ学習開始日を設定していません。</p>'
+      : '<p class="today-desc">上の「開始日」を設定すると今日のタスクが表示されます。</p>';
+    return;
+  }
+  const todayDay = getTodayDay();
+  if (todayDay < 1) {
+    box.innerHTML = `<p class="today-desc">開始日は <strong>${data.startDate}</strong> です。その日までお待ちください。</p>`;
+    return;
+  }
+  if (todayDay > 60) {
+    box.innerHTML = '<p class="today-desc">🎉 60日間の学習期間が完了しました！</p>';
+    return;
+  }
+  const plan = PLAN[todayDay - 1];
+  const isDone = !!(data.completed && data.completed[todayDay]);
+  let actionsHtml = '';
+  if (!isWatch) {
+    actionsHtml = `
+      ${isDone
+        ? `<button class="secondary" onclick="toggleDay(${todayDay})">✅ 完了済み（取り消す）</button>`
+        : `<button onclick="toggleDay(${todayDay})">✅ 今日の分を完了する</button>`}
+      ${plan.phase <= 3
+        ? `<a class="res-link" style="padding:8px 14px;" href="https://www.youtube.com/@bokisimasyo/playlists" target="_blank">🎥 ふくしま先生の動画へ</a>`
+        : `<a class="res-link" style="padding:8px 14px;" href="https://inuboki.com/" target="_blank">🐕 犬簿記へ</a>`}
+    `;
+  } else {
+    actionsHtml = `<div style="font-size:0.88rem;color:var(--muted);">${isDone ? '✅ 今日のタスクは完了済みです' : '⏳ まだ今日の分は終わっていません'}</div>`;
+  }
+  box.innerHTML = `
+    <div class="today-title">Day ${plan.day} / Phase ${plan.phase}　${plan.topic}</div>
+    <div class="today-desc">
+      📖 <strong>内容:</strong> ${plan.detail}<br>
+      🎯 <strong>今日のゴール:</strong> ${plan.target}
+    </div>
+    <div class="today-actions">${actionsHtml}</div>
+  `;
+}
+
+function renderCalendar() {
+  const cal = document.getElementById('calendar');
+  cal.innerHTML = '';
+  const todayDay = getTodayDay();
+  for (let i = 1; i <= 60; i++) {
+    const div = document.createElement('div');
+    div.className = 'day-cell';
+    const done = data.completed && data.completed[i];
+    div.style.background = done ? 'var(--done)' : phaseColor(PLAN[i-1].phase);
+    if (done) div.classList.add('done');
+    if (i === todayDay) div.classList.add('today');
+    if (todayDay !== null && i > todayDay) div.classList.add('future');
+    div.innerHTML = `<div class="day-num">${i}</div><div class="day-phase">P${PLAN[i-1].phase}</div>`;
+    div.title = `Day ${i}: ${PLAN[i-1].topic}`;
+    if (!isWatch) div.onclick = () => window.toggleDay(i);
+    cal.appendChild(div);
+  }
+}
+
+function renderPlanTable() {
+  const t = document.getElementById('planTable');
+  const todayDay = getTodayDay();
+  let html = '<thead><tr><th>✓</th><th>Day</th><th>Phase</th><th>テーマ</th><th>内容</th><th>目標</th></tr></thead><tbody>';
+  PLAN.forEach(p => {
+    const done = data.completed && data.completed[p.day];
+    const isToday = p.day === todayDay;
+    const checkHtml = isWatch
+      ? (done ? '✅' : '—')
+      : `<input type="checkbox" class="plan-check" ${done ? 'checked' : ''} onchange="toggleDay(${p.day})">`;
+    html += `<tr class="${done ? 'done-row' : ''} ${isToday ? 'today-row' : ''}">
+      <td>${checkHtml}</td>
+      <td>${p.day}</td>
+      <td>${p.phase}</td>
+      <td>${p.topic}</td>
+      <td>${p.detail}</td>
+      <td>${p.target}</td>
+    </tr>`;
+  });
+  html += '</tbody>';
+  t.innerHTML = html;
+}
+
+function renderLogs() {
+  const list = document.getElementById('logList');
+  const logs = data.logs || [];
+  if (logs.length === 0) {
+    list.innerHTML = `<p style="color:var(--muted);font-size:0.85rem;margin-top:8px;">${isWatch ? 'まだメモがありません。' : 'まだメモがありません。'}</p>`;
+    return;
+  }
+  list.innerHTML = logs.slice(0, 30).map(l =>
+    `<div class="log-item">
+      <div class="log-date">${l.date} ${l.time || ''} ${l.day ? '(Day '+l.day+')' : ''}</div>
+      <div>${escapeHtml(l.text).replace(/\n/g,'<br>')}</div>
+    </div>`
+  ).join('');
+}
+
+function renderEncouragements() {
+  const list = document.getElementById('encList');
+  const encs = data.encouragements || [];
+  if (encs.length === 0) {
+    list.innerHTML = `<p style="color:var(--muted);font-size:0.85rem;">${isWatch ? 'まだ応援メッセージを送っていません' : '応援メッセージがまだありません'}</p>`;
+    return;
+  }
+  list.innerHTML = encs.slice(0, 20).map((e, i) => {
+    const isNew = !isWatch && i === 0 && (Date.now() - parseInt(e.id)) < 86400000;
+    return `<div class="enc-item ${isNew ? 'new' : ''}">
+      <div class="enc-meta">${e.date} ${e.time || ''}</div>
+      <div>${escapeHtml(e.text)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderQuote() {
+  const todayDay = getTodayDay() || 1;
+  document.getElementById('quote').textContent = QUOTES[todayDay % QUOTES.length];
+}
+
+function renderWatchStatus() {
+  const la = document.getElementById('lastActive');
+  const td = document.getElementById('todayDone');
+  if (data.lastActiveAt) {
+    la.textContent = relativeTime(data.lastActiveAt);
+    const diff = (Date.now() - new Date(data.lastActiveAt)) / 1000 / 86400;
+    la.className = 'last-active ' + (diff < 1 ? 'ok' : diff < 2 ? 'warn' : 'bad');
+  } else {
+    la.textContent = '未アクセス';
+    la.className = 'last-active bad';
+  }
+  const todayDay = getTodayDay();
+  if (todayDay && todayDay >= 1 && todayDay <= 60) {
+    td.textContent = (data.completed && data.completed[todayDay]) ? '✅ 完了！' : '⏳ 未完了';
+  } else {
+    td.textContent = '—';
+  }
+}
+
+// 30秒ごとに「◯分前」表示を更新
+setInterval(() => { if (isWatch) renderWatchStatus(); }, 30000);
+</script>
+</body>
+</html>
