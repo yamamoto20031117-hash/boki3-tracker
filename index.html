@@ -617,135 +617,156 @@ const QUOTES = [
   "「手を動かした分だけ、脳に残る」"
 ];
 
-/* ========= 動画番号別の復習仕訳 ========= */
+const ACCOUNTS = [
+  "現金","小口現金","当座預金","普通預金","受取手形","売掛金",
+  "クレジット売掛金","電子記録債権","繰越商品","貯蔵品","前払金","前払費用",
+  "前払保険料","前払家賃","未収入金","未収利息","未収収益","未収家賃",
+  "仮払金","仮払消費税","仮払法人税等","貸付金","手形貸付金","従業員貸付金",
+  "役員貸付金","立替金","従業員立替金","建物","備品","車両運搬具",
+  "土地","差入保証金","支払手形","買掛金","電子記録債務","当座借越",
+  "借入金","手形借入金","前受金","前受収益","前受家賃","未払金",
+  "未払費用","未払給料","未払利息","未払法人税等","未払消費税","未払配当金",
+  "仮受金","仮受消費税","預り金","所得税預り金","社会保険料預り金","貸倒引当金",
+  "減価償却累計額","建物減価償却累計額","備品減価償却累計額","車両運搬具減価償却累計額","資本金","利益準備金",
+  "繰越利益剰余金","売上","受取利息","受取家賃","受取地代","受取手数料",
+  "受取配当金","雑益","償却債権取立益","貸倒引当金戻入","固定資産売却益","仕入",
+  "売上原価","発送費","給料","法定福利費","通信費","旅費交通費",
+  "消耗品費","水道光熱費","保険料","支払家賃","支払地代","広告宣伝費",
+  "修繕費","租税公課","支払利息","支払手数料","雑損","貸倒損失",
+  "貸倒引当金繰入","減価償却費","固定資産売却損","固定資産除却損","手形売却損","法人税等",
+  "現金過不足","損益"
+];
+
+/* ========= 動画番号別の復習仕訳（構造化）========= */
 const REVIEW_PROBLEMS_BY_VIDEO = {
   1: [
-    { q: "簿記の5要素を答えよ。", a: "資産・負債・純資産・収益・費用" },
-    { q: "借方と貸方、どちらが左でどちらが右か。", a: "借方が左／貸方が右。略称は「借は左、貸は右」" },
-    { q: "資産・費用が増えたときの仕訳位置は？", a: "借方（左側）に記入" }
+    { type: "concept", q: "簿記の5要素を答えよ。", a: "資産・負債・純資産・収益・費用" },
+    { type: "concept", q: "借方と貸方、どちらが左でどちらが右か。", a: "借方が左／貸方が右。略称は「借は左、貸は右」" },
+    { type: "concept", q: "資産・費用が増えたときの仕訳位置は？", a: "借方（左側）に記入" }
   ],
   2: [
-    { q: "商品¥50,000を現金で売上げた。", a: "(借) 現金 50,000 ／ (貸) 売上 50,000" },
-    { q: "給料¥200,000を現金で支払った。", a: "(借) 給料 200,000 ／ (貸) 現金 200,000" },
-    { q: "決算日、現金の実際有高が帳簿より¥3,000多かった（原因不明）。", a: "(借) 現金 3,000 ／ (貸) 現金過不足 3,000" }
+    { type: "journal", q: "商品¥50,000を現金で売上げた。", debit: [{ ac: "現金", amt: 50000 }], credit: [{ ac: "売上", amt: 50000 }] },
+    { type: "journal", q: "給料¥200,000を現金で支払った。", debit: [{ ac: "給料", amt: 200000 }], credit: [{ ac: "現金", amt: 200000 }] },
+    { type: "journal", q: "決算日、現金の実際有高が帳簿より¥3,000多かった（原因不明）。", debit: [{ ac: "現金", amt: 3000 }], credit: [{ ac: "現金過不足", amt: 3000 }] }
   ],
   3: [
-    { q: "現金¥100,000を当座預金に預け入れた。", a: "(借) 当座預金 100,000 ／ (貸) 現金 100,000" },
-    { q: "買掛金¥80,000を小切手を振出して支払った。", a: "(借) 買掛金 80,000 ／ (貸) 当座預金 80,000" },
-    { q: "決算時、当座預金が貸方残高¥50,000（当座借越）となっている場合の振替仕訳。", a: "(借) 当座預金 50,000 ／ (貸) 当座借越 50,000" }
+    { type: "journal", q: "現金¥100,000を当座預金に預け入れた。", debit: [{ ac: "当座預金", amt: 100000 }], credit: [{ ac: "現金", amt: 100000 }] },
+    { type: "journal", q: "買掛金¥80,000を小切手を振出して支払った。", debit: [{ ac: "買掛金", amt: 80000 }], credit: [{ ac: "当座預金", amt: 80000 }] },
+    { type: "journal", q: "決算時、当座預金が貸方残高¥50,000（当座借越）となっている。振替仕訳を答えよ。", debit: [{ ac: "当座預金", amt: 50000 }], credit: [{ ac: "当座借越", amt: 50000 }] }
   ],
   4: [
-    { q: "商品¥60,000を掛で仕入れ、引取運賃¥2,000を現金で支払った（三分法）。", a: "(借) 仕入 62,000 ／ (貸) 買掛金 60,000・現金 2,000" },
-    { q: "商品¥100,000を掛で売上げ、発送費¥3,000を現金で支払った（当社負担）。", a: "(借) 売掛金 100,000・発送費 3,000 ／ (貸) 売上 100,000・現金 3,000" },
-    { q: "クレジットカードで商品¥50,000を売上げ（手数料5％）。", a: "(借) クレジット売掛金 47,500・支払手数料 2,500 ／ (貸) 売上 50,000" }
+    { type: "journal", q: "商品¥60,000を掛で仕入れ、引取運賃¥2,000を現金で支払った（三分法）。", debit: [{ ac: "仕入", amt: 62000 }], credit: [{ ac: "買掛金", amt: 60000 }, { ac: "現金", amt: 2000 }] },
+    { type: "journal", q: "商品¥100,000を掛で売上げ、発送費¥3,000を現金で支払った（当社負担）。", debit: [{ ac: "売掛金", amt: 100000 }, { ac: "発送費", amt: 3000 }], credit: [{ ac: "売上", amt: 100000 }, { ac: "現金", amt: 3000 }] },
+    { type: "journal", q: "クレジットカードで商品¥50,000を売上げた（手数料5％）。", debit: [{ ac: "クレジット売掛金", amt: 47500 }, { ac: "支払手数料", amt: 2500 }], credit: [{ ac: "売上", amt: 50000 }] }
   ],
   5: [
-    { q: "商品¥150,000を仕入れ、約束手形を振り出した。", a: "(借) 仕入 150,000 ／ (貸) 支払手形 150,000" },
-    { q: "受取手形¥200,000が満期となり、当座預金で回収。", a: "(借) 当座預金 200,000 ／ (貸) 受取手形 200,000" },
-    { q: "電子記録債権¥100,000を発生させた（売掛金から振替）。", a: "(借) 電子記録債権 100,000 ／ (貸) 売掛金 100,000" }
+    { type: "journal", q: "商品¥150,000を仕入れ、約束手形を振り出した。", debit: [{ ac: "仕入", amt: 150000 }], credit: [{ ac: "支払手形", amt: 150000 }] },
+    { type: "journal", q: "受取手形¥200,000が満期となり、当座預金で回収した。", debit: [{ ac: "当座預金", amt: 200000 }], credit: [{ ac: "受取手形", amt: 200000 }] },
+    { type: "journal", q: "売掛金¥100,000を電子記録債権に振り替えた。", debit: [{ ac: "電子記録債権", amt: 100000 }], credit: [{ ac: "売掛金", amt: 100000 }] }
   ],
   6: [
-    { q: "備品¥500,000を購入し、据付費¥20,000と合わせて現金で支払った。", a: "(借) 備品 520,000 ／ (貸) 現金 520,000" },
-    { q: "通信費¥5,000を現金で支払った。", a: "(借) 通信費 5,000 ／ (貸) 現金 5,000" },
-    { q: "従業員への仮払金¥30,000を現金で渡した。", a: "(借) 仮払金 30,000 ／ (貸) 現金 30,000" }
+    { type: "journal", q: "備品¥500,000を購入し、据付費¥20,000と合わせて現金で支払った。", debit: [{ ac: "備品", amt: 520000 }], credit: [{ ac: "現金", amt: 520000 }] },
+    { type: "journal", q: "通信費¥5,000を現金で支払った。", debit: [{ ac: "通信費", amt: 5000 }], credit: [{ ac: "現金", amt: 5000 }] },
+    { type: "journal", q: "従業員への仮払金¥30,000を現金で渡した。", debit: [{ ac: "仮払金", amt: 30000 }], credit: [{ ac: "現金", amt: 30000 }] }
   ],
   7: [
-    { q: "会社設立時、株式を発行し現金¥1,000,000を受け取った。", a: "(借) 現金 1,000,000 ／ (貸) 資本金 1,000,000" },
-    { q: "増資により株式を発行、当座預金¥500,000が入金。", a: "(借) 当座預金 500,000 ／ (貸) 資本金 500,000" },
-    { q: "決算で当期純利益¥200,000を繰越利益剰余金に振替。", a: "(借) 損益 200,000 ／ (貸) 繰越利益剰余金 200,000" }
+    { type: "journal", q: "会社設立時、株式を発行し現金¥1,000,000を受け取った。", debit: [{ ac: "現金", amt: 1000000 }], credit: [{ ac: "資本金", amt: 1000000 }] },
+    { type: "journal", q: "増資により株式を発行、当座預金¥500,000が入金された。", debit: [{ ac: "当座預金", amt: 500000 }], credit: [{ ac: "資本金", amt: 500000 }] },
+    { type: "journal", q: "決算で当期純利益¥200,000を繰越利益剰余金に振替えた。", debit: [{ ac: "損益", amt: 200000 }], credit: [{ ac: "繰越利益剰余金", amt: 200000 }] }
   ],
   8: [
-    { q: "決算の手続きを3つの大きな段階に分けると？", a: "①決算予備手続（試算表作成・棚卸） ②決算本手続（決算整理・財務諸表作成） ③決算後手続（帳簿締切）" },
-    { q: "決算整理仕訳の代表的な5項目を挙げよ。", a: "①売上原価計算 ②減価償却 ③貸倒引当金 ④経過勘定 ⑤現金過不足処理" },
-    { q: "損益勘定への振替の目的は？", a: "収益・費用の各勘定を損益に集めて当期純利益を計算するため" }
+    { type: "concept", q: "決算の手続きを3段階に分けると？", a: "①決算予備手続（試算表作成・棚卸） ②決算本手続（決算整理・財務諸表作成） ③決算後手続（帳簿締切）" },
+    { type: "concept", q: "決算整理仕訳の代表的な5項目を挙げよ。", a: "①売上原価計算 ②減価償却 ③貸倒引当金 ④経過勘定 ⑤現金過不足処理" },
+    { type: "concept", q: "損益勘定への振替の目的は？", a: "収益・費用の各勘定を損益に集めて当期純利益を計算するため" }
   ],
   9: [
-    { q: "決算で保険料¥60,000のうち¥20,000が次期分と判明。", a: "(借) 前払保険料 20,000 ／ (貸) 保険料 20,000" },
-    { q: "決算で給料の未払分¥50,000を計上。", a: "(借) 給料 50,000 ／ (貸) 未払給料 50,000" },
-    { q: "決算で現金過不足¥3,000（不足・原因不明）を雑損に振替。", a: "(借) 雑損 3,000 ／ (貸) 現金過不足 3,000" },
-    { q: "決算で未使用の郵便切手¥800を貯蔵品に振替。", a: "(借) 貯蔵品 800 ／ (貸) 通信費 800" }
+    { type: "journal", q: "決算で保険料¥60,000のうち¥20,000が次期分と判明した。", debit: [{ ac: "前払保険料", amt: 20000 }], credit: [{ ac: "保険料", amt: 20000 }] },
+    { type: "journal", q: "決算で給料の未払分¥50,000を計上する。", debit: [{ ac: "給料", amt: 50000 }], credit: [{ ac: "未払給料", amt: 50000 }] },
+    { type: "journal", q: "決算で現金過不足¥3,000（不足・原因不明）を雑損に振替えた。", debit: [{ ac: "雑損", amt: 3000 }], credit: [{ ac: "現金過不足", amt: 3000 }] },
+    { type: "journal", q: "決算で未使用の郵便切手¥800を貯蔵品に振替える。", debit: [{ ac: "貯蔵品", amt: 800 }], credit: [{ ac: "通信費", amt: 800 }] }
   ],
   10: [
-    { q: "建物¥1,200,000を定額法（耐用20年・残存ゼロ・間接法）で減価償却。", a: "(借) 減価償却費 60,000 ／ (貸) 建物減価償却累計額 60,000" },
-    { q: "売掛金期末残高¥2,000,000に2%の貸倒引当金を差額補充法で設定（残高¥20,000）。", a: "(借) 貸倒引当金繰入 20,000 ／ (貸) 貸倒引当金 20,000" },
-    { q: "期首に備品（取得¥300,000・累計額¥120,000）を¥150,000で売却。現金受取。", a: "(借) 現金 150,000・備品減価償却累計額 120,000・固定資産売却損 30,000 ／ (貸) 備品 300,000" }
+    { type: "journal", q: "建物¥1,200,000を定額法（耐用20年・残存ゼロ・間接法）で減価償却する。", debit: [{ ac: "減価償却費", amt: 60000 }], credit: [{ ac: "建物減価償却累計額", amt: 60000 }] },
+    { type: "journal", q: "売掛金期末残高¥2,000,000に2%の貸倒引当金を差額補充法で設定する（残高¥20,000）。", debit: [{ ac: "貸倒引当金繰入", amt: 20000 }], credit: [{ ac: "貸倒引当金", amt: 20000 }] },
+    { type: "journal", q: "期首に備品（取得¥300,000・累計額¥120,000）を¥150,000で売却し、現金で受取った。", debit: [{ ac: "現金", amt: 150000 }, { ac: "備品減価償却累計額", amt: 120000 }, { ac: "固定資産売却損", amt: 30000 }], credit: [{ ac: "備品", amt: 300000 }] }
   ],
   11: [
-    { q: "決算で売上原価を仕入勘定で算定（期首商品¥100,000、期末商品¥120,000）。", a: "(借) 仕入 100,000 ／ (貸) 繰越商品 100,000　(借) 繰越商品 120,000 ／ (貸) 仕入 120,000" },
-    { q: "売上原価を「売上原価」勘定で算定する方法の決算整理仕訳。", a: "(借) 売上原価 100,000 ／ (貸) 繰越商品 100,000　(借) 売上原価 XXX ／ (貸) 仕入 XXX　(借) 繰越商品 120,000 ／ (貸) 売上原価 120,000" },
-    { q: "「しーくりくりしー」の語呂合わせの意味は？", a: "仕入→繰越商品、繰越商品→仕入の2段階振替で売上原価を算定すること" }
+    { type: "journal", q: "決算で売上原価を仕入勘定で算定する（期首商品¥100,000）。1つ目の仕訳。", debit: [{ ac: "仕入", amt: 100000 }], credit: [{ ac: "繰越商品", amt: 100000 }] },
+    { type: "journal", q: "決算で売上原価を仕入勘定で算定する（期末商品¥120,000）。2つ目の仕訳。", debit: [{ ac: "繰越商品", amt: 120000 }], credit: [{ ac: "仕入", amt: 120000 }] },
+    { type: "concept", q: "「しーくりくりしー」の語呂合わせの意味は？", a: "仕入→繰越商品、繰越商品→仕入の2段階振替で売上原価を算定すること" }
   ],
   12: [
-    { q: "現金¥110,000で商品（税抜¥100,000／消費税10%）を仕入（税抜方式）。", a: "(借) 仕入 100,000・仮払消費税 10,000 ／ (貸) 現金 110,000" },
-    { q: "固定資産税¥40,000を現金で納付。", a: "(借) 租税公課 40,000 ／ (貸) 現金 40,000" },
-    { q: "決算で法人税等¥150,000を計上（仮払法人税等¥80,000あり）。", a: "(借) 法人税、住民税及び事業税 150,000 ／ (貸) 仮払法人税等 80,000・未払法人税等 70,000" }
+    { type: "journal", q: "商品（税抜¥100,000／消費税10%）を現金で仕入れた（税抜方式）。", debit: [{ ac: "仕入", amt: 100000 }, { ac: "仮払消費税", amt: 10000 }], credit: [{ ac: "現金", amt: 110000 }] },
+    { type: "journal", q: "固定資産税¥40,000を現金で納付した。", debit: [{ ac: "租税公課", amt: 40000 }], credit: [{ ac: "現金", amt: 40000 }] },
+    { type: "journal", q: "決算で法人税等¥150,000を計上（仮払法人税等¥80,000あり）。", debit: [{ ac: "法人税等", amt: 150000 }], credit: [{ ac: "仮払法人税等", amt: 80000 }, { ac: "未払法人税等", amt: 70000 }] }
   ],
   13: [
-    { q: "株主総会で繰越利益剰余金から配当¥300,000、利益準備金¥30,000を計上。", a: "(借) 繰越利益剰余金 330,000 ／ (貸) 未払配当金 300,000・利益準備金 30,000" },
-    { q: "配当金¥300,000を当座預金から支払った。", a: "(借) 未払配当金 300,000 ／ (貸) 当座預金 300,000" },
-    { q: "利益準備金はいつ積み立てる？", a: "配当額の10分の1を、資本金の4分の1に達するまで積み立てる（会社法）" }
+    { type: "journal", q: "株主総会で繰越利益剰余金から配当¥300,000、利益準備金¥30,000を計上した。", debit: [{ ac: "繰越利益剰余金", amt: 330000 }], credit: [{ ac: "未払配当金", amt: 300000 }, { ac: "利益準備金", amt: 30000 }] },
+    { type: "journal", q: "配当金¥300,000を当座預金から支払った。", debit: [{ ac: "未払配当金", amt: 300000 }], credit: [{ ac: "当座預金", amt: 300000 }] },
+    { type: "concept", q: "利益準備金はいつ積み立てる？", a: "配当額の10分の1を、資本金の4分の1に達するまで積み立てる（会社法）" }
   ],
   14: [
-    { q: "商品有高帳の「先入先出法」とは？", a: "先に仕入れた商品から先に払出すと仮定して単価計算する方法" },
-    { q: "売上帳・仕入帳・売掛金元帳・買掛金元帳のうち、補助元帳はどれ？", a: "売掛金元帳・買掛金元帳（得意先・仕入先別の内訳）。売上帳・仕入帳は補助記入帳" },
-    { q: "総勘定元帳と補助簿の関係は？", a: "総勘定元帳は全ての取引の集計、補助簿は特定の勘定や取引の詳細を補足する" }
+    { type: "concept", q: "商品有高帳の「先入先出法」とは？", a: "先に仕入れた商品から先に払出すと仮定して単価計算する方法" },
+    { type: "concept", q: "売上帳・仕入帳・売掛金元帳・買掛金元帳のうち、補助元帳はどれ？", a: "売掛金元帳・買掛金元帳。売上帳・仕入帳は補助記入帳" },
+    { type: "concept", q: "総勘定元帳と補助簿の関係は？", a: "総勘定元帳は全ての取引の集計、補助簿は特定の勘定や取引の詳細を補足する" }
   ],
   15: [
-    { q: "残高試算表の貸借が一致しなかった。原因究明のチェックポイントを3つ。", a: "① 転記ミス（貸借を逆）　② 金額の書き違い　③ 仕訳そのものが未転記／重複転記" },
-    { q: "合計試算表と残高試算表の違いは？", a: "合計試算表は借方合計・貸方合計をそれぞれ示す。残高試算表は差額の残高のみ示す" },
-    { q: "合計残高試算表は何を表示する？", a: "借方合計・借方残高・勘定科目・貸方残高・貸方合計の5列（合計と残高の両方）" }
+    { type: "concept", q: "残高試算表の貸借が一致しなかった。原因究明のチェックポイントを3つ。", a: "① 転記ミス（貸借を逆）　② 金額の書き違い　③ 仕訳の未転記／重複転記" },
+    { type: "concept", q: "合計試算表と残高試算表の違いは？", a: "合計試算表は借方合計・貸方合計を示す。残高試算表は差額の残高のみ示す" },
+    { type: "concept", q: "合計残高試算表の構成は？", a: "借方合計・借方残高・勘定科目・貸方残高・貸方合計の5列" }
   ],
   16: [
-    { q: "精算表の修正記入欄で「売上原価計算」の仕訳はどう記入？", a: "(借) 仕入 期首 ／ (貸) 繰越商品 期首　(借) 繰越商品 期末 ／ (貸) 仕入 期末" },
-    { q: "当期純利益を精算表でどう表記するか。", a: "損益計算書欄の借方に「当期純利益」として差額記入、貸借対照表欄の貸方にも同額記入" },
-    { q: "貸借対照表の繰越利益剰余金の計算式。", a: "期首繰越利益剰余金 ＋ 当期純利益 ＝ 期末繰越利益剰余金" }
+    { type: "journal", q: "精算表の修正記入欄：売上原価計算（期首商品¥80,000）の1つ目の仕訳。", debit: [{ ac: "仕入", amt: 80000 }], credit: [{ ac: "繰越商品", amt: 80000 }] },
+    { type: "journal", q: "精算表の修正記入欄：売上原価計算（期末商品¥90,000）の2つ目の仕訳。", debit: [{ ac: "繰越商品", amt: 90000 }], credit: [{ ac: "仕入", amt: 90000 }] },
+    { type: "journal", q: "精算表で備品¥500,000の減価償却（定額法・耐用5年・残存ゼロ・間接法）の修正仕訳。", debit: [{ ac: "減価償却費", amt: 100000 }], credit: [{ ac: "備品減価償却累計額", amt: 100000 }] },
+    { type: "concept", q: "当期純利益を精算表でどう表記するか。", a: "損益計算書欄の借方に「当期純利益」として差額記入、貸借対照表欄の貸方にも同額記入" }
   ],
   17: [
-    { q: "決算で売上勘定（¥500,000）を損益勘定に振替。", a: "(借) 売上 500,000 ／ (貸) 損益 500,000" },
-    { q: "決算で仕入勘定（¥300,000）を損益勘定に振替。", a: "(借) 損益 300,000 ／ (貸) 仕入 300,000" },
-    { q: "期首の再振替仕訳（前期末に計上した前払保険料¥20,000）。", a: "(借) 保険料 20,000 ／ (貸) 前払保険料 20,000" }
+    { type: "journal", q: "決算で売上勘定（¥500,000）を損益勘定に振替えた。", debit: [{ ac: "売上", amt: 500000 }], credit: [{ ac: "損益", amt: 500000 }] },
+    { type: "journal", q: "決算で仕入勘定（¥300,000）を損益勘定に振替えた。", debit: [{ ac: "損益", amt: 300000 }], credit: [{ ac: "仕入", amt: 300000 }] },
+    { type: "journal", q: "期首の再振替仕訳（前期末に計上した前払保険料¥20,000）。", debit: [{ ac: "保険料", amt: 20000 }], credit: [{ ac: "前払保険料", amt: 20000 }] }
   ],
   18: [
-    { q: "小口現金から交通費¥800、通信費¥500を支払った報告後、同額を補給（定額資金前渡法）。", a: "(借) 交通費 800・通信費 500 ／ (貸) 小口現金 1,300　(借) 小口現金 1,300 ／ (貸) 現金 1,300" },
-    { q: "約束手形¥100,000を振出して商品を仕入。", a: "(借) 仕入 100,000 ／ (貸) 支払手形 100,000" },
-    { q: "受取手形¥200,000を銀行で割引。割引料¥3,000差引後の残額が当座預金へ。", a: "(借) 当座預金 197,000・手形売却損 3,000 ／ (貸) 受取手形 200,000" }
+    { type: "journal", q: "小口現金から交通費¥800、通信費¥500を支払った報告を受けた。", debit: [{ ac: "旅費交通費", amt: 800 }, { ac: "通信費", amt: 500 }], credit: [{ ac: "小口現金", amt: 1300 }] },
+    { type: "journal", q: "約束手形¥100,000を振出し、商品を仕入れた。", debit: [{ ac: "仕入", amt: 100000 }], credit: [{ ac: "支払手形", amt: 100000 }] },
+    { type: "journal", q: "受取手形¥200,000を銀行で割引き、割引料¥3,000差引後の残額が当座預金へ入金された。", debit: [{ ac: "当座預金", amt: 197000 }, { ac: "手形売却損", amt: 3000 }], credit: [{ ac: "受取手形", amt: 200000 }] }
   ],
   19: [
-    { q: "期中（7月1日）に取得した備品¥600,000を定額法（耐用5年・残存ゼロ・間接法）で決算（3月末）。", a: "(借) 減価償却費 90,000 ／ (貸) 備品減価償却累計額 90,000（600,000÷5×9/12）" },
-    { q: "取得原価¥400,000・累計額¥320,000の備品を¥50,000で売却、現金受取。", a: "(借) 現金 50,000・備品減価償却累計額 320,000・固定資産売却損 30,000 ／ (貸) 備品 400,000" },
-    { q: "取得原価¥500,000・累計額¥499,999の備品を廃棄（備忘価額1円）。", a: "(借) 備品減価償却累計額 499,999・固定資産除却損 1 ／ (貸) 備品 500,000" }
+    { type: "journal", q: "7月1日取得の備品¥600,000を定額法（耐用5年・残存ゼロ・間接法）で決算（3月末）。", debit: [{ ac: "減価償却費", amt: 90000 }], credit: [{ ac: "備品減価償却累計額", amt: 90000 }] },
+    { type: "journal", q: "取得¥400,000・累計額¥320,000の備品を¥50,000で売却、現金受取。", debit: [{ ac: "現金", amt: 50000 }, { ac: "備品減価償却累計額", amt: 320000 }, { ac: "固定資産売却損", amt: 30000 }], credit: [{ ac: "備品", amt: 400000 }] },
+    { type: "journal", q: "取得¥500,000・累計額¥499,999の備品を廃棄（備忘価額1円）。", debit: [{ ac: "備品減価償却累計額", amt: 499999 }, { ac: "固定資産除却損", amt: 1 }], credit: [{ ac: "備品", amt: 500000 }] }
   ],
   20: [
-    { q: "売掛金期末¥2,000,000に2%の貸倒引当金を差額補充法（残高¥20,000）。", a: "(借) 貸倒引当金繰入 20,000 ／ (貸) 貸倒引当金 20,000" },
-    { q: "前期発生の売掛金¥30,000が貸倒。引当金残高¥50,000。", a: "(借) 貸倒引当金 30,000 ／ (貸) 売掛金 30,000" },
-    { q: "当期発生の売掛金¥40,000が貸倒。", a: "(借) 貸倒損失 40,000 ／ (貸) 売掛金 40,000" },
-    { q: "前期に貸倒処理した売掛金¥25,000を現金で回収。", a: "(借) 現金 25,000 ／ (貸) 償却債権取立益 25,000" }
+    { type: "journal", q: "売掛金期末¥2,000,000に2%の貸倒引当金を差額補充法で設定（残高¥20,000）。", debit: [{ ac: "貸倒引当金繰入", amt: 20000 }], credit: [{ ac: "貸倒引当金", amt: 20000 }] },
+    { type: "journal", q: "前期発生の売掛金¥30,000が貸倒れた。貸倒引当金残高¥50,000。", debit: [{ ac: "貸倒引当金", amt: 30000 }], credit: [{ ac: "売掛金", amt: 30000 }] },
+    { type: "journal", q: "当期発生の売掛金¥40,000が貸倒れた。", debit: [{ ac: "貸倒損失", amt: 40000 }], credit: [{ ac: "売掛金", amt: 40000 }] },
+    { type: "journal", q: "前期に貸倒処理した売掛金¥25,000を現金で回収した。", debit: [{ ac: "現金", amt: 25000 }], credit: [{ ac: "償却債権取立益", amt: 25000 }] }
   ],
   21: [
-    { q: "決算で保険料¥60,000のうち¥20,000が次期分。", a: "(借) 前払保険料 20,000 ／ (貸) 保険料 20,000" },
-    { q: "決算で給料の未払分¥50,000を計上。", a: "(借) 給料 50,000 ／ (貸) 未払給料 50,000" },
-    { q: "決算で利息の未収分¥5,000を計上。", a: "(借) 未収利息 5,000 ／ (貸) 受取利息 5,000" },
-    { q: "決算で受取家賃¥120,000のうち¥40,000が次期分。", a: "(借) 受取家賃 40,000 ／ (貸) 前受家賃 40,000" }
+    { type: "journal", q: "決算で保険料¥60,000のうち¥20,000が次期分。", debit: [{ ac: "前払保険料", amt: 20000 }], credit: [{ ac: "保険料", amt: 20000 }] },
+    { type: "journal", q: "決算で給料の未払分¥50,000を計上。", debit: [{ ac: "給料", amt: 50000 }], credit: [{ ac: "未払給料", amt: 50000 }] },
+    { type: "journal", q: "決算で利息の未収分¥5,000を計上。", debit: [{ ac: "未収利息", amt: 5000 }], credit: [{ ac: "受取利息", amt: 5000 }] },
+    { type: "journal", q: "決算で受取家賃¥120,000のうち¥40,000が次期分。", debit: [{ ac: "受取家賃", amt: 40000 }], credit: [{ ac: "前受家賃", amt: 40000 }] }
   ],
   22: [
-    { q: "商品¥100,000（税抜）を仕入、消費税10%を含めて現金支払（税抜方式）。", a: "(借) 仕入 100,000・仮払消費税 10,000 ／ (貸) 現金 110,000" },
-    { q: "商品¥200,000（税抜）を売上、消費税10%を含めて掛け（税抜方式）。", a: "(借) 売掛金 220,000 ／ (貸) 売上 200,000・仮受消費税 20,000" },
-    { q: "決算で仮払消費税¥10,000と仮受消費税¥20,000を相殺し未払分計上。", a: "(借) 仮受消費税 20,000 ／ (貸) 仮払消費税 10,000・未払消費税 10,000" }
+    { type: "journal", q: "商品¥100,000（税抜）を仕入、消費税10%を含めて現金支払（税抜方式）。", debit: [{ ac: "仕入", amt: 100000 }, { ac: "仮払消費税", amt: 10000 }], credit: [{ ac: "現金", amt: 110000 }] },
+    { type: "journal", q: "商品¥200,000（税抜）を掛売上、消費税10%込（税抜方式）。", debit: [{ ac: "売掛金", amt: 220000 }], credit: [{ ac: "売上", amt: 200000 }, { ac: "仮受消費税", amt: 20000 }] },
+    { type: "journal", q: "決算で仮払消費税¥10,000と仮受消費税¥20,000を相殺し未払分を計上。", debit: [{ ac: "仮受消費税", amt: 20000 }], credit: [{ ac: "仮払消費税", amt: 10000 }, { ac: "未払消費税", amt: 10000 }] }
   ],
   23: [
-    { q: "残高試算表の貸借不一致の原因究明ポイント3つ。", a: "① 転記ミス　② 金額の書き違い　③ 仕訳の未転記／重複転記" },
-    { q: "精算表の「決算整理」列で減価償却を書く場所は？", a: "借方：減価償却費／貸方：減価償却累計額" },
-    { q: "B/Sの資産の部に計上される主な科目を5つ。", a: "現金・当座預金・売掛金・商品・建物/備品（−減価償却累計額）" }
+    { type: "concept", q: "残高試算表の貸借不一致の原因を3つ。", a: "① 転記ミス　② 金額の書き違い　③ 仕訳の未転記／重複転記" },
+    { type: "concept", q: "精算表の「決算整理」列で減価償却を書く場所。", a: "借方：減価償却費／貸方：減価償却累計額" },
+    { type: "concept", q: "B/Sの資産の部に計上される主な科目を5つ。", a: "現金・当座預金・売掛金・商品・建物/備品（−減価償却累計額）" }
   ],
   24: [
-    { q: "商品¥100,000を掛で売上。", a: "(借) 売掛金 100,000 ／ (貸) 売上 100,000" },
-    { q: "商品¥50,000を現金仕入、引取運賃¥2,000も現金支払。", a: "(借) 仕入 52,000 ／ (貸) 現金 52,000" },
-    { q: "得意先倒産、前期発生の売掛金¥80,000貸倒。引当金残高¥50,000。", a: "(借) 貸倒引当金 50,000・貸倒損失 30,000 ／ (貸) 売掛金 80,000" }
+    { type: "journal", q: "商品¥100,000を掛で売上げた。", debit: [{ ac: "売掛金", amt: 100000 }], credit: [{ ac: "売上", amt: 100000 }] },
+    { type: "journal", q: "商品¥50,000を現金で仕入れ、引取運賃¥2,000も現金で支払った。", debit: [{ ac: "仕入", amt: 52000 }], credit: [{ ac: "現金", amt: 52000 }] },
+    { type: "journal", q: "得意先倒産、前期発生の売掛金¥80,000が貸倒。引当金残高¥50,000。", debit: [{ ac: "貸倒引当金", amt: 50000 }, { ac: "貸倒損失", amt: 30000 }], credit: [{ ac: "売掛金", amt: 80000 }] }
   ],
   25: [
-    { q: "決算で売掛金¥500,000に2%の貸倒引当金を設定（残高¥4,000）。", a: "(借) 貸倒引当金繰入 6,000 ／ (貸) 貸倒引当金 6,000" },
-    { q: "決算で備品（取得¥400,000・耐用5年・定額法・間接法・期中8ヶ月経過）。", a: "(借) 減価償却費 53,333 ／ (貸) 備品減価償却累計額 53,333（400,000÷5×8/12）" },
-    { q: "決算で保険料の前払分¥15,000を振替。", a: "(借) 前払保険料 15,000 ／ (貸) 保険料 15,000" }
+    { type: "journal", q: "決算で売掛金¥500,000に2%の貸倒引当金を設定（残高¥4,000）。", debit: [{ ac: "貸倒引当金繰入", amt: 6000 }], credit: [{ ac: "貸倒引当金", amt: 6000 }] },
+    { type: "journal", q: "決算で備品（取得¥400,000・耐用5年・定額法・間接法・期中取得の8ヶ月経過分）。", debit: [{ ac: "減価償却費", amt: 53333 }], credit: [{ ac: "備品減価償却累計額", amt: 53333 }] },
+    { type: "journal", q: "決算で保険料の前払分¥15,000を振替。", debit: [{ ac: "前払保険料", amt: 15000 }], credit: [{ ac: "保険料", amt: 15000 }] }
   ]
 };
 
@@ -787,83 +808,61 @@ const VIDEO_LIBRARY = [
 // 1〜25の番号でアクセスできるフラットな動画参照
 const VIDEO_LIBRARY_FLAT = VIDEO_LIBRARY.flatMap(g => g.videos).map(v => ({ jp: v.n, title: v.title, id: v.id }));
 
-/* ========= 仕訳道場（分野別仕訳問題） ========= */
+/* ========= 仕訳道場（分野別・構造化）========= */
 const SHIKKEN_DOJO = [
-  {
-    category: "① 現金・預金",
-    problems: [
-      { q: "商品¥10,000を仕入れ、代金は現金で支払った。", a: "(借) 仕入 10,000 ／ (貸) 現金 10,000" },
-      { q: "現金¥50,000を普通預金に預け入れた。", a: "(借) 普通預金 50,000 ／ (貸) 現金 50,000" },
-      { q: "決算で現金の実際有高が帳簿より¥3,000少ないことが判明。原因不明のため雑損として処理。", a: "(借) 雑損 3,000 ／ (貸) 現金 3,000" },
-      { q: "小口現金¥20,000を当座預金から補給した。", a: "(借) 小口現金 20,000 ／ (貸) 当座預金 20,000" },
-      { q: "当座預金の残高を超えて¥30,000支払われた（当座借越契約あり）。", a: "(借) 当座預金 30,000 ／ (貸) （支払先勘定） 30,000　※決算時に当座借越/短期借入金へ振替" }
-    ]
-  },
-  {
-    category: "② 商品売買",
-    problems: [
-      { q: "商品¥30,000を掛で売り上げ、引取運賃¥1,000は先方負担で現金で立替払い。", a: "(借) 売掛金 31,000 ／ (貸) 売上 30,000・現金 1,000" },
-      { q: "掛で仕入れた商品¥5,000を品違いで返品した。", a: "(借) 買掛金 5,000 ／ (貸) 仕入 5,000" },
-      { q: "商品¥100,000をクレジットカード払いで販売（手数料5%）。", a: "(借) クレジット売掛金 95,000・支払手数料 5,000 ／ (貸) 売上 100,000" },
-      { q: "ICカードにチャージ¥5,000を現金で行った。", a: "(借) 仮払金（またはIC乗車券） 5,000 ／ (貸) 現金 5,000" }
-    ]
-  },
-  {
-    category: "③ 債権・債務（手形・電子記録など）",
-    problems: [
-      { q: "約束手形¥200,000を振り出して仕入代金を支払った。", a: "(借) 仕入 200,000 ／ (貸) 支払手形 200,000" },
-      { q: "受取手形¥150,000を取立てに出し、当座預金に入金された。", a: "(借) 当座預金 150,000 ／ (貸) 受取手形 150,000" },
-      { q: "売掛金¥80,000について電子記録債権の発生記録を受けた。", a: "(借) 電子記録債権 80,000 ／ (貸) 売掛金 80,000" },
-      { q: "得意先に¥500,000を貸付、利息¥5,000を差引いた残額を現金で渡した。", a: "(借) 貸付金 500,000 ／ (貸) 現金 495,000・受取利息 5,000" },
-      { q: "従業員の出張に際し、旅費概算額¥30,000を現金で支給した。", a: "(借) 仮払金 30,000 ／ (貸) 現金 30,000" }
-    ]
-  },
-  {
-    category: "④ 固定資産・減価償却",
-    problems: [
-      { q: "建物¥2,000,000を購入、登録費用¥50,000とともに現金で支払った。", a: "(借) 建物 2,050,000 ／ (貸) 現金 2,050,000" },
-      { q: "決算で建物（取得原価¥2,050,000、耐用年数25年、残存ゼロ、定額法、間接法）を償却。", a: "(借) 減価償却費 82,000 ／ (貸) 建物減価償却累計額 82,000" },
-      { q: "備品（取得¥300,000、累計額¥180,000）を¥100,000で売却し現金受取。", a: "(借) 現金 100,000・備品減価償却累計額 180,000・固定資産売却損 20,000 ／ (貸) 備品 300,000" },
-      { q: "備品の通常修繕¥40,000を現金で支払った。", a: "(借) 修繕費 40,000 ／ (貸) 現金 40,000" }
-    ]
-  },
-  {
-    category: "⑤ 貸倒引当金",
-    problems: [
-      { q: "期末売掛金¥1,000,000に2%の貸倒引当金を差額補充法で設定（残高¥8,000）。", a: "(借) 貸倒引当金繰入 12,000 ／ (貸) 貸倒引当金 12,000" },
-      { q: "前期発生の売掛金¥20,000が貸倒れた。引当金残高¥50,000。", a: "(借) 貸倒引当金 20,000 ／ (貸) 売掛金 20,000" },
-      { q: "当期発生の売掛金¥15,000が貸倒れた。", a: "(借) 貸倒損失 15,000 ／ (貸) 売掛金 15,000" },
-      { q: "前期に貸倒処理した¥30,000を当期に現金で回収。", a: "(借) 現金 30,000 ／ (貸) 償却債権取立益 30,000" }
-    ]
-  },
-  {
-    category: "⑥ 経過勘定（前払・前受・未払・未収）",
-    problems: [
-      { q: "決算で保険料¥72,000のうち¥24,000が次期分。", a: "(借) 前払保険料 24,000 ／ (貸) 保険料 24,000" },
-      { q: "決算で家賃の未払分¥80,000を計上。", a: "(借) 支払家賃 80,000 ／ (貸) 未払家賃 80,000" },
-      { q: "決算で受取利息の未収分¥3,000を計上。", a: "(借) 未収利息 3,000 ／ (貸) 受取利息 3,000" },
-      { q: "決算で受取地代¥60,000のうち¥20,000が次期分。", a: "(借) 受取地代 20,000 ／ (貸) 前受地代 20,000" },
-      { q: "期首の再振替仕訳（前期末に計上した未払給料¥50,000）", a: "(借) 未払給料 50,000 ／ (貸) 給料 50,000" }
-    ]
-  },
-  {
-    category: "⑦ 資本・税金・社会保険",
-    problems: [
-      { q: "株主からの出資¥5,000,000を受取り、当座預金に入金。", a: "(借) 当座預金 5,000,000 ／ (貸) 資本金 5,000,000" },
-      { q: "固定資産税¥60,000を現金で納付。", a: "(借) 租税公課 60,000 ／ (貸) 現金 60,000" },
-      { q: "給料¥250,000から源泉所得税¥8,000・社会保険料¥35,000を控除して現金支給。", a: "(借) 給料 250,000 ／ (貸) 現金 207,000・預り金 43,000" },
-      { q: "消費税の中間納付¥40,000を現金で支払った（税抜方式）。", a: "(借) 仮払消費税 40,000 ／ (貸) 現金 40,000" }
-    ]
-  },
-  {
-    category: "⑧ 伝票・決算整理",
-    problems: [
-      { q: "決算で当座借越¥80,000を短期借入金に振替える。", a: "(借) 当座預金 80,000 ／ (貸) 当座借越（または短期借入金） 80,000" },
-      { q: "決算で売上原価を仕入勘定で算定（期首商品¥80,000・期末商品¥100,000）。", a: "(借) 仕入 80,000 ／ (貸) 繰越商品 80,000　(借) 繰越商品 100,000 ／ (貸) 仕入 100,000" },
-      { q: "売上勘定¥600,000を損益勘定に振替える。", a: "(借) 売上 600,000 ／ (貸) 損益 600,000" },
-      { q: "損益勘定で算定した当期純利益¥120,000を繰越利益剰余金に振替。", a: "(借) 損益 120,000 ／ (貸) 繰越利益剰余金 120,000" }
-    ]
-  }
+  { category: "① 現金・預金", problems: [
+    { type: "journal", q: "現金¥50,000を普通預金に預け入れた。", debit: [{ ac: "普通預金", amt: 50000 }], credit: [{ ac: "現金", amt: 50000 }] },
+    { type: "journal", q: "他店振出の小切手¥30,000を受け取った（現金扱い）。", debit: [{ ac: "現金", amt: 30000 }], credit: [{ ac: "売掛金", amt: 30000 }] },
+    { type: "journal", q: "小切手¥80,000を振り出して買掛金を支払った。", debit: [{ ac: "買掛金", amt: 80000 }], credit: [{ ac: "当座預金", amt: 80000 }] },
+    { type: "journal", q: "決算で当座預金が貸方残高¥50,000（当座借越）になっていたため、振替処理。", debit: [{ ac: "当座預金", amt: 50000 }], credit: [{ ac: "当座借越", amt: 50000 }] }
+  ]},
+  { category: "② 商品売買", problems: [
+    { type: "journal", q: "商品¥60,000を掛で仕入れ、引取運賃¥2,000を現金で支払った。", debit: [{ ac: "仕入", amt: 62000 }], credit: [{ ac: "買掛金", amt: 60000 }, { ac: "現金", amt: 2000 }] },
+    { type: "journal", q: "商品¥100,000を掛で売上げ、発送費¥3,000を現金で支払った（当社負担）。", debit: [{ ac: "売掛金", amt: 100000 }, { ac: "発送費", amt: 3000 }], credit: [{ ac: "売上", amt: 100000 }, { ac: "現金", amt: 3000 }] },
+    { type: "journal", q: "返品：掛仕入れた商品のうち¥10,000分を返品した。", debit: [{ ac: "買掛金", amt: 10000 }], credit: [{ ac: "仕入", amt: 10000 }] },
+    { type: "journal", q: "クレジット売上¥100,000（手数料5%）。", debit: [{ ac: "クレジット売掛金", amt: 95000 }, { ac: "支払手数料", amt: 5000 }], credit: [{ ac: "売上", amt: 100000 }] },
+    { type: "journal", q: "前払金¥20,000を現金で支払った（商品の手付金）。", debit: [{ ac: "前払金", amt: 20000 }], credit: [{ ac: "現金", amt: 20000 }] }
+  ]},
+  { category: "③ 債権・債務（手形・電子記録など）", problems: [
+    { type: "journal", q: "約束手形¥150,000を振り出し、商品を仕入れた。", debit: [{ ac: "仕入", amt: 150000 }], credit: [{ ac: "支払手形", amt: 150000 }] },
+    { type: "journal", q: "受取手形¥200,000が満期となり、当座預金に入金された。", debit: [{ ac: "当座預金", amt: 200000 }], credit: [{ ac: "受取手形", amt: 200000 }] },
+    { type: "journal", q: "受取手形¥100,000を割引き、割引料¥2,000差引後の¥98,000が当座預金へ。", debit: [{ ac: "当座預金", amt: 98000 }, { ac: "手形売却損", amt: 2000 }], credit: [{ ac: "受取手形", amt: 100000 }] },
+    { type: "journal", q: "売掛金¥80,000を電子記録債権に振り替えた。", debit: [{ ac: "電子記録債権", amt: 80000 }], credit: [{ ac: "売掛金", amt: 80000 }] },
+    { type: "journal", q: "借入金¥500,000を借り入れ、当座預金に入金された。", debit: [{ ac: "当座預金", amt: 500000 }], credit: [{ ac: "借入金", amt: 500000 }] }
+  ]},
+  { category: "④ 固定資産・減価償却", problems: [
+    { type: "journal", q: "建物¥2,000,000を購入し、購入手数料¥100,000と合わせて現金で支払った。", debit: [{ ac: "建物", amt: 2100000 }], credit: [{ ac: "現金", amt: 2100000 }] },
+    { type: "journal", q: "建物¥1,200,000を定額法（耐用20年・残存ゼロ・間接法）で減価償却。", debit: [{ ac: "減価償却費", amt: 60000 }], credit: [{ ac: "建物減価償却累計額", amt: 60000 }] },
+    { type: "journal", q: "備品（取得¥300,000・累計額¥120,000）を¥150,000で売却、現金受取。", debit: [{ ac: "現金", amt: 150000 }, { ac: "備品減価償却累計額", amt: 120000 }, { ac: "固定資産売却損", amt: 30000 }], credit: [{ ac: "備品", amt: 300000 }] },
+    { type: "journal", q: "建物の改良（資本的支出）¥300,000を現金で支払った。", debit: [{ ac: "建物", amt: 300000 }], credit: [{ ac: "現金", amt: 300000 }] },
+    { type: "journal", q: "建物の通常修繕¥50,000を現金で支払った。", debit: [{ ac: "修繕費", amt: 50000 }], credit: [{ ac: "現金", amt: 50000 }] }
+  ]},
+  { category: "⑤ 貸倒引当金", problems: [
+    { type: "journal", q: "売掛金期末¥2,000,000に2%の貸倒引当金を差額補充法で設定（残高¥20,000）。", debit: [{ ac: "貸倒引当金繰入", amt: 20000 }], credit: [{ ac: "貸倒引当金", amt: 20000 }] },
+    { type: "journal", q: "前期発生の売掛金¥30,000が貸倒。引当金残高¥50,000。", debit: [{ ac: "貸倒引当金", amt: 30000 }], credit: [{ ac: "売掛金", amt: 30000 }] },
+    { type: "journal", q: "当期発生の売掛金¥40,000が貸倒。", debit: [{ ac: "貸倒損失", amt: 40000 }], credit: [{ ac: "売掛金", amt: 40000 }] },
+    { type: "journal", q: "前期貸倒処理分¥25,000を現金回収。", debit: [{ ac: "現金", amt: 25000 }], credit: [{ ac: "償却債権取立益", amt: 25000 }] }
+  ]},
+  { category: "⑥ 経過勘定（前払・前受・未払・未収）", problems: [
+    { type: "journal", q: "決算で保険料¥60,000のうち¥20,000が次期分。", debit: [{ ac: "前払保険料", amt: 20000 }], credit: [{ ac: "保険料", amt: 20000 }] },
+    { type: "journal", q: "決算で給料の未払分¥50,000を計上。", debit: [{ ac: "給料", amt: 50000 }], credit: [{ ac: "未払給料", amt: 50000 }] },
+    { type: "journal", q: "決算で利息の未収分¥5,000を計上。", debit: [{ ac: "未収利息", amt: 5000 }], credit: [{ ac: "受取利息", amt: 5000 }] },
+    { type: "journal", q: "決算で受取家賃¥120,000のうち¥40,000が次期分。", debit: [{ ac: "受取家賃", amt: 40000 }], credit: [{ ac: "前受家賃", amt: 40000 }] },
+    { type: "journal", q: "期首の再振替仕訳（前期末計上の前払保険料¥20,000）。", debit: [{ ac: "保険料", amt: 20000 }], credit: [{ ac: "前払保険料", amt: 20000 }] }
+  ]},
+  { category: "⑦ 資本・税金・社会保険", problems: [
+    { type: "journal", q: "会社設立、現金¥1,000,000を出資・資本金に。", debit: [{ ac: "現金", amt: 1000000 }], credit: [{ ac: "資本金", amt: 1000000 }] },
+    { type: "journal", q: "固定資産税¥40,000を現金で納付。", debit: [{ ac: "租税公課", amt: 40000 }], credit: [{ ac: "現金", amt: 40000 }] },
+    { type: "journal", q: "給料¥300,000から源泉所得税¥10,000・社保料¥42,000を控除、残額を現金支給。", debit: [{ ac: "給料", amt: 300000 }], credit: [{ ac: "現金", amt: 248000 }, { ac: "所得税預り金", amt: 10000 }, { ac: "社会保険料預り金", amt: 42000 }] },
+    { type: "journal", q: "決算で法人税等¥150,000計上（仮払法人税等¥80,000あり）。", debit: [{ ac: "法人税等", amt: 150000 }], credit: [{ ac: "仮払法人税等", amt: 80000 }, { ac: "未払法人税等", amt: 70000 }] }
+  ]},
+  { category: "⑧ 決算整理・帳簿締切", problems: [
+    { type: "journal", q: "売上原価計算（期首商品¥80,000、期末商品¥100,000）1つ目。", debit: [{ ac: "仕入", amt: 80000 }], credit: [{ ac: "繰越商品", amt: 80000 }] },
+    { type: "journal", q: "売上原価計算 2つ目。", debit: [{ ac: "繰越商品", amt: 100000 }], credit: [{ ac: "仕入", amt: 100000 }] },
+    { type: "journal", q: "決算で売上勘定¥500,000を損益勘定に振替。", debit: [{ ac: "売上", amt: 500000 }], credit: [{ ac: "損益", amt: 500000 }] },
+    { type: "journal", q: "決算で仕入勘定¥300,000を損益勘定に振替。", debit: [{ ac: "損益", amt: 300000 }], credit: [{ ac: "仕入", amt: 300000 }] },
+    { type: "journal", q: "当期純利益¥200,000を繰越利益剰余金に振替。", debit: [{ ac: "損益", amt: 200000 }], credit: [{ ac: "繰越利益剰余金", amt: 200000 }] }
+  ]}
 ];
 
 /* ========= 状態管理 ========= */
@@ -1136,26 +1135,137 @@ function renderVideoLibrary() {
 function renderShikenDojo() {
   const box = document.getElementById('shikenBody');
   if (!box) return;
-  if (box.dataset.rendered === '1') return; // 一度だけ描画（静的データ）
+  if (box.dataset.rendered === '1') return; // 一度だけ描画
   let html = '';
   SHIKKEN_DOJO.forEach((cat, ci) => {
-    html += `<details class="shiken-cat" style="margin:10px 0;border:1px solid var(--border);border-radius:8px;padding:8px 12px;">
-      <summary style="cursor:pointer;font-weight:700;color:var(--primary);font-size:1rem;">${cat.category}（${cat.problems.length}問）</summary>
-      <ol style="margin:12px 0 4px;padding-left:24px;">`;
+    html += `<details class="shiken-cat" style="margin:10px 0;border:1px solid var(--border);border-radius:8px;padding:10px 14px;">
+      <summary style="cursor:pointer;font-weight:700;color:var(--primary);font-size:1rem;">${escapeHtml(cat.category)}（${cat.problems.length}問）</summary>
+      <div style="margin-top:10px;">`;
     cat.problems.forEach((p, pi) => {
-      const aid = `shiken-a-${ci}-${pi}`;
-      html += `<li style="margin-bottom:14px;line-height:1.6;">
-        <div style="margin-bottom:4px;">${escapeHtml(p.q)}</div>
-        <details><summary style="cursor:pointer;color:var(--accent);font-size:0.9rem;">答えを見る</summary>
-          <div style="margin-top:6px;padding:8px 10px;background:#f5f9f5;border-left:3px solid var(--primary);border-radius:4px;font-size:0.92rem;">${escapeHtml(p.a)}</div>
-        </details>
-      </li>`;
+      html += renderProblem(p, `dojo-${ci}-${pi}`);
     });
-    html += `</ol></details>`;
+    html += `</div></details>`;
   });
   box.innerHTML = html;
   box.dataset.rendered = '1';
 }
+
+/* ========= 仕訳入力フォーム ========= */
+function renderProblem(p, id) {
+  if (p.type === 'concept') {
+    return `<div class="problem" style="margin:10px 0;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:6px;">
+      <div class="q-text" style="font-weight:600;margin-bottom:6px;">${escapeHtml(p.q)}</div>
+      <details><summary style="cursor:pointer;color:var(--accent);font-size:0.9rem;">答えを見る</summary>
+        <div style="margin-top:6px;padding:8px 10px;background:#f5f9f5;border-left:3px solid var(--primary);border-radius:4px;font-size:0.92rem;">${escapeHtml(p.a)}</div>
+      </details>
+    </div>`;
+  }
+  // journal form
+  const accOpts = ['<option value=""></option>'].concat(ACCOUNTS.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`)).join('');
+  // 4 rows by default
+  const rows = Array.from({length: 4}, (_, i) => {
+    return `<tr>
+      <td><select class="j-debit-ac" data-row="${i}">${accOpts}</select></td>
+      <td><input type="text" class="j-debit-amt" data-row="${i}" inputmode="numeric" placeholder="0"></td>
+      <td><select class="j-credit-ac" data-row="${i}">${accOpts}</select></td>
+      <td><input type="text" class="j-credit-amt" data-row="${i}" inputmode="numeric" placeholder="0"></td>
+    </tr>`;
+  }).join('');
+  return `<div class="problem journal-problem" id="${id}" style="margin:12px 0;padding:12px 14px;background:#eef1ff;border-radius:8px;">
+    <div class="q-text" style="font-weight:600;margin-bottom:10px;line-height:1.6;">${escapeHtml(p.q)}</div>
+    <table class="journal-table" style="width:100%;border-collapse:collapse;background:#fff;">
+      <thead><tr style="background:#f5f5f5;font-size:0.85rem;">
+        <th style="padding:6px;border:1px solid #ddd;">借方科目</th>
+        <th style="padding:6px;border:1px solid #ddd;">金額</th>
+        <th style="padding:6px;border:1px solid #ddd;">貸方科目</th>
+        <th style="padding:6px;border:1px solid #ddd;">金額</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+      <button type="button" onclick="checkJournalAnswer('${id}')" style="padding:6px 14px;background:var(--primary);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.9rem;">✅ 答え合わせ</button>
+      <button type="button" onclick="resetJournalAnswer('${id}')" style="padding:6px 14px;background:#999;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.9rem;">↻ リセット</button>
+      <details style="display:inline-block;"><summary style="cursor:pointer;color:var(--accent);font-size:0.9rem;padding:6px 0;">解説を見る</summary>
+        <div style="margin-top:6px;padding:8px 10px;background:#fff;border-left:3px solid var(--primary);border-radius:4px;font-size:0.9rem;">${renderJournalAnswer(p)}</div>
+      </details>
+    </div>
+    <div class="j-result" data-pid="${id}" style="margin-top:8px;font-size:0.9rem;"></div>
+  </div>`;
+}
+
+function renderJournalAnswer(p) {
+  const dStr = p.debit.map(e => `${escapeHtml(e.ac)} ${e.amt.toLocaleString()}`).join(' ／ ');
+  const cStr = p.credit.map(e => `${escapeHtml(e.ac)} ${e.amt.toLocaleString()}`).join(' ／ ');
+  return `<div>(借) ${dStr}</div><div>(貸) ${cStr}</div>`;
+}
+
+window.checkJournalAnswer = function(id) {
+  const box = document.getElementById(id);
+  if (!box) return;
+  // gather user entries
+  function collect(selAc, selAmt) {
+    const acs = box.querySelectorAll('.' + selAc);
+    const amts = box.querySelectorAll('.' + selAmt);
+    const out = [];
+    for (let i = 0; i < acs.length; i++) {
+      const ac = acs[i].value.trim();
+      const amt = parseInt((amts[i].value || '').replace(/[,¥\s]/g, ''), 10);
+      if (ac && !isNaN(amt) && amt > 0) out.push({ ac, amt });
+    }
+    return out;
+  }
+  const userD = collect('j-debit-ac', 'j-debit-amt');
+  const userC = collect('j-credit-ac', 'j-credit-amt');
+
+  // find problem data
+  const pid = id;
+  const problem = __JOURNAL_INDEX[pid];
+  if (!problem) { console.warn('problem not indexed:', pid); return; }
+
+  const result = document.querySelector(`.j-result[data-pid="${id}"]`);
+  const dOK = compareEntries(userD, problem.debit);
+  const cOK = compareEntries(userC, problem.credit);
+  if (dOK && cOK) {
+    result.innerHTML = '<span style="color:#2e7d32;font-weight:700;">🎉 正解！</span>';
+    box.style.background = '#e8f5e9';
+  } else {
+    let msg = '<span style="color:#c62828;font-weight:700;">❌ 不正解</span>　';
+    if (!dOK) msg += '借方が違います。';
+    if (!cOK) msg += '貸方が違います。';
+    msg += '<br><span style="color:#555;font-size:0.85rem;">正解: (借) ' +
+      problem.debit.map(e => `${e.ac} ${e.amt.toLocaleString()}`).join('／') +
+      '　(貸) ' + problem.credit.map(e => `${e.ac} ${e.amt.toLocaleString()}`).join('／') + '</span>';
+    result.innerHTML = msg;
+    box.style.background = '#ffebee';
+  }
+};
+
+window.resetJournalAnswer = function(id) {
+  const box = document.getElementById(id);
+  if (!box) return;
+  box.querySelectorAll('select').forEach(s => s.value = '');
+  box.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+  const result = box.querySelector('.j-result');
+  if (result) result.innerHTML = '';
+  box.style.background = '#eef1ff';
+};
+
+function compareEntries(user, correct) {
+  if (user.length !== correct.length) return false;
+  // normalize: sort by account name
+  const norm = (arr) => arr.map(e => e.ac + '|' + e.amt).sort().join(',');
+  return norm(user) === norm(correct);
+}
+
+// 問題IDから問題データを逆引きするインデックス（renderProblem時に構築）
+const __JOURNAL_INDEX = {};
+
+// renderProblem のラップ：問題データをインデックスに登録
+const __origRenderProblem = renderProblem;
+renderProblem = function(p, id) {
+  if (p.type === 'journal') __JOURNAL_INDEX[id] = p;
+  return __origRenderProblem(p, id);
+};
 
 function renderStartInfo() {
   const info = document.getElementById('startInfo');
@@ -1245,30 +1355,24 @@ function renderToday() {
   } else {
     actionsHtml = `<div style="font-size:0.88rem;color:var(--muted);">${isDone ? '✅ 今日のタスクは完了済みです' : '⏳ まだ今日の分は終わっていません'}</div>`;
   }
-  // 今日見る動画番号リストに応じて復習仕訳を表示（動画ごとにセクション化）
-  let reviewHtml = '';
+  // 今日見る動画番号リストに応じてインタラクティブ仕訳入力フォームを表示
   const videos = Array.isArray(plan.videos) ? plan.videos : [];
   const videoSections = videos
     .map(n => ({ n, probs: REVIEW_PROBLEMS_BY_VIDEO[n] }))
     .filter(s => s.probs && s.probs.length);
+  let reviewHtml = '';
   if (videoSections.length) {
     const totalQ = videoSections.reduce((s, v) => s + v.probs.length, 0);
-    reviewHtml = `<details open style="margin-top:14px;border:1px solid var(--border);border-radius:8px;padding:8px 12px;background:#fafcf7;">
+    reviewHtml = `<details open style="margin-top:14px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:#fafcf7;">
       <summary style="cursor:pointer;font-weight:700;color:var(--primary);">📝 今日の復習仕訳（動画を見た後に）— 全${totalQ}問</summary>`;
     videoSections.forEach(sec => {
       const v = VIDEO_LIBRARY_FLAT[sec.n - 1];
       const label = v ? `${v.jp}${v.title}` : `動画${sec.n}`;
-      reviewHtml += `<div style="margin-top:10px;"><div style="font-weight:600;color:var(--accent);margin:6px 0;">▼ ${escapeHtml(label)}（${sec.probs.length}問）</div>
-        <ol style="margin:6px 0 4px;padding-left:24px;">`;
-      sec.probs.forEach(p => {
-        reviewHtml += `<li style="margin-bottom:12px;line-height:1.6;">
-          <div style="margin-bottom:4px;">${escapeHtml(p.q)}</div>
-          <details><summary style="cursor:pointer;color:var(--accent);font-size:0.9rem;">答えを見る</summary>
-            <div style="margin-top:6px;padding:8px 10px;background:#f5f9f5;border-left:3px solid var(--primary);border-radius:4px;font-size:0.92rem;">${escapeHtml(p.a)}</div>
-          </details>
-        </li>`;
+      reviewHtml += `<div style="margin-top:14px;"><div style="font-weight:600;color:var(--accent);margin:8px 0;">▼ ${escapeHtml(label)}（${sec.probs.length}問）</div>`;
+      sec.probs.forEach((p, pi) => {
+        reviewHtml += renderProblem(p, `review-${sec.n}-${pi}`);
       });
-      reviewHtml += `</ol></div>`;
+      reviewHtml += `</div>`;
     });
     reviewHtml += `</details>`;
   }
