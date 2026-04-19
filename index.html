@@ -541,73 +541,70 @@ const auth = getAuth(app);
 
 /* ========= プラン（60日分） ========= */
 const PLAN = [
-  // ===== Phase 1: 決算整理の基礎論点（Day 1-14） =====
-  { day: 1, phase: 1, topic: "⑲減価償却費【じっくり解説版】", detail: "ふくしま先生⑲: 定額法・間接法・減価償却累計額をじっくり理解する 👉 <a href='https://youtu.be/6VOc4B0miUs' target='_blank' rel='noopener'>🎥 動画を見る</a>　／ 不安な人は <a href='https://youtu.be/JGXIB-dJCMM' target='_blank' rel='noopener'>①入門（全体像）</a> もどうぞ", target: "動画視聴＋ノートまとめ" },
-  { day: 2, phase: 1, topic: "減価償却 練習問題①", detail: "犬簿記で減価償却の仕訳問題を解く", target: "犬簿記で10問以上" },
-  { day: 3, phase: 1, topic: "減価償却 応用問題", detail: "期中売却・月割計算など応用パターン", target: "犬簿記で5問以上" },
-  { day: 4, phase: 1, topic: "⑳貸倒引当金【じっくり解説版】", detail: "ふくしま先生⑳: 差額補充法／償却債権取立益／貸倒引当金戻入／貸倒損失 👉 <a href='https://youtu.be/fQTauJ9TEmU' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "動画視聴＋ノートまとめ" },
-  { day: 5, phase: 1, topic: "貸倒引当金 練習問題①", detail: "差額補充法の仕訳を中心に解く", target: "犬簿記で10問以上" },
-  { day: 6, phase: 1, topic: "貸倒引当金 応用問題", detail: "貸倒損失・償却債権取立益の処理", target: "犬簿記で5問以上" },
-  { day: 7, phase: 1, topic: "【復習日】Day1-6の振り返り", detail: "減価償却＋貸倒引当金を1問ずつ解き直す", target: "苦手な仕訳パターンを特定" },
-  { day: 8, phase: 1, topic: "㉑経過勘定", detail: "ふくしま先生㉑: 未収収益／未払費用／前払費用／前受収益の理屈をシッカリ 👉 <a href='https://youtu.be/NroMg1A7zgI' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "動画視聴＋ノートまとめ" },
-  { day: 9, phase: 1, topic: "経過勘定 練習問題①", detail: "未払費用・未収収益の仕訳", target: "犬簿記で10問以上" },
-  { day: 10, phase: 1, topic: "経過勘定 練習問題②", detail: "前払費用・前受収益の仕訳", target: "犬簿記で10問以上" },
-  { day: 11, phase: 1, topic: "経過勘定 応用問題", detail: "再振替仕訳まで含めた問題", target: "犬簿記で5問以上" },
-  { day: 12, phase: 1, topic: "決算整理 仕訳マラソン", detail: "減価償却・貸倒引当金・経過勘定の仕訳を一気に30問", target: "反射で解けるように" },
-  { day: 13, phase: 1, topic: "決算整理 総合問題", detail: "複合問題にチャレンジ", target: "犬簿記で総合問題2題" },
-  { day: 14, phase: 1, topic: "【総復習日】Phase1まとめ", detail: "決算整理の基礎論点を全部見直す", target: "苦手論点の洗い出し" },
-
-  // ===== Phase 2: 伝票・精算表・財務諸表（Day 15-28） =====
-  { day: 15, phase: 2, topic: "⑮伝票", detail: "ふくしま先生⑮: 振替伝票・入金伝票・出金伝票の使い方 👉 <a href='https://youtu.be/22MUwXTr75Q' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "動画視聴＋ノートまとめ" },
-  { day: 16, phase: 2, topic: "伝票 練習問題（3伝票制）", detail: "一部現金取引の処理を練習", target: "犬簿記で10問以上" },
-  { day: 17, phase: 2, topic: "伝票 応用問題（仕訳日計表）", detail: "仕訳日計表の作成練習", target: "犬簿記で5題" },
-  { day: 18, phase: 2, topic: "⑯精算表・財務諸表（作り方）", detail: "ふくしま先生⑯: 精算表の構造／財務諸表の作り方 👉 <a href='https://youtu.be/-2H-2ZPpH6Y' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "動画視聴＋ノートまとめ" },
-  { day: 19, phase: 2, topic: "精算表 実践①", detail: "精算表を1枚完成させる", target: "例題1枚（時間制限なし）" },
-  { day: 20, phase: 2, topic: "精算表 実践②", detail: "精算表を1枚完成させる（前日より早く）", target: "例題1枚" },
-  { day: 21, phase: 2, topic: "⑰勘定記入・帳簿締切", detail: "ふくしま先生⑰: 勘定の締切・繰越記入・帳簿決算のしくみをマスター 👉 <a href='https://youtu.be/mqVdPhliWJ8' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "動画視聴＋ノートまとめ" },
-  { day: 22, phase: 2, topic: "⑰ 勘定記入 練習問題", detail: "勘定の締切・繰越記入の問題を解く", target: "犬簿記で5問以上" },
-  { day: 23, phase: 2, topic: "㉓残高試算表・精算表・財務諸表【じっくり解説版】", detail: "ふくしま先生㉓: 貸借対照表と損益計算書もガッツリ 👉 <a href='https://youtu.be/tXfH06C6hSM' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "動画視聴＋ノートまとめ" },
-  { day: 24, phase: 2, topic: "残高試算表 作成練習", detail: "T勘定から残高試算表を作る", target: "犬簿記で2題" },
-  { day: 25, phase: 2, topic: "精算表 時間制限あり", detail: "30分以内で精算表を完成させる", target: "例題1〜2枚" },
-  { day: 26, phase: 2, topic: "損益計算書(P/L)の作成", detail: "精算表から損益計算書へ", target: "犬簿記で2題" },
-  { day: 27, phase: 2, topic: "貸借対照表(B/S)の作成", detail: "精算表から貸借対照表へ", target: "犬簿記で2題" },
-  { day: 28, phase: 2, topic: "【総復習日】Phase2まとめ", detail: "伝票・精算表・財務諸表・勘定記入を全部見直す", target: "苦手論点の再確認" },
-
-  // ===== Phase 3: 応用論点と総復習（Day 29-42） =====
-  { day: 29, phase: 3, topic: "㉒社会保険【チョイ難】", detail: "ふくしま先生㉒: 健康保険／厚生年金／雇用保険／労災保険／源泉所得税 👉 <a href='https://youtu.be/RGf8MreKdTE' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "動画視聴＋ノートまとめ" },
-  { day: 30, phase: 3, topic: "社会保険 練習問題", detail: "社会保険の仕訳パターンを身につける", target: "犬簿記で5問以上" },
-  { day: 31, phase: 3, topic: "㉕発展論点", detail: "ふくしま先生㉕: 資本的支出と収益的支出／備忘価額／再振替仕訳／訂正仕訳 👉 <a href='https://youtu.be/pBQtvpQ5kug' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "動画視聴＋ノートまとめ" },
-  { day: 32, phase: 3, topic: "発展論点 練習①", detail: "資本的支出・収益的支出／備忘価額の問題", target: "犬簿記で5問以上" },
-  { day: 33, phase: 3, topic: "発展論点 練習②", detail: "再振替仕訳・訂正仕訳の問題", target: "犬簿記で5問以上" },
-  { day: 34, phase: 3, topic: "【復習日】Day29-33の振り返り", detail: "社会保険＋発展論点を解き直す", target: "弱点の洗い出し" },
-  { day: 35, phase: 3, topic: "⑱総復習問題70問 1/3", detail: "ふくしま先生⑱の総復習問題を約23問解く（やさしめ〜標準） 👉 <a href='https://youtu.be/glQvr5d42g0' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "1〜23問目" },
-  { day: 36, phase: 3, topic: "⑱総復習問題70問 2/3", detail: "続きの約23問を解く 👉 <a href='https://youtu.be/glQvr5d42g0' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "24〜46問目" },
-  { day: 37, phase: 3, topic: "⑱総復習問題70問 3/3", detail: "最後の約24問を解く 👉 <a href='https://youtu.be/glQvr5d42g0' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "47〜70問目" },
-  { day: 38, phase: 3, topic: "総復習問題 間違い直し", detail: "70問で間違えた論点をノートにまとめる", target: "弱点を言語化" },
-  { day: 39, phase: 3, topic: "犬簿記 第1問（仕訳15問）①", detail: "本番想定で15問を制限時間内に", target: "犬簿記で1セット" },
-  { day: 40, phase: 3, topic: "犬簿記 第1問（仕訳15問）②", detail: "別セットで15問", target: "犬簿記で1セット" },
-  { day: 41, phase: 3, topic: "犬簿記 第2問（帳簿・補助簿）", detail: "商品有高帳／勘定記入／補助簿", target: "犬簿記で2題" },
-  { day: 42, phase: 3, topic: "【総復習日】Phase3まとめ", detail: "応用論点＋総復習70問の弱点を再チェック", target: "苦手論点ゼロを目指す" },
-
-  // ===== Phase 4: 本試験直結演習（Day 43-60） =====
-  { day: 43, phase: 4, topic: "㉔本試験レベル問題50問 1/2", detail: "ふくしま先生㉔: 本試験レベルの50問にチャレンジ（前半25問） 👉 <a href='https://youtu.be/av4WjijRDSY' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "1〜25問目" },
-  { day: 44, phase: 4, topic: "㉔本試験レベル問題50問 2/2", detail: "後半25問にチャレンジ 👉 <a href='https://youtu.be/av4WjijRDSY' target='_blank' rel='noopener'>🎥 動画を見る</a>", target: "26〜50問目" },
-  { day: 45, phase: 4, topic: "本試験レベル問題 間違い分析", detail: "間違えた問題の論点を動画に戻って再確認", target: "ノートまとめ" },
-  { day: 46, phase: 4, topic: "犬簿記 第3問（精算表）", detail: "精算表の総合問題を1題", target: "犬簿記で1題（30分）" },
-  { day: 47, phase: 4, topic: "犬簿記 第3問（財務諸表）", detail: "財務諸表の総合問題を1題", target: "犬簿記で1題（30分）" },
-  { day: 48, phase: 4, topic: "犬簿記 過去問通し①", detail: "第1〜3問を60分で通し", target: "本番想定で1セット" },
-  { day: 49, phase: 4, topic: "過去問① 徹底復習", detail: "間違えた論点を動画＋ノートで復習", target: "弱点を埋める" },
-  { day: 50, phase: 4, topic: "模擬試験①（本番同様60分）", detail: "犬簿記の予想問題で本番想定", target: "時間計測＋採点" },
-  { day: 51, phase: 4, topic: "模試① 復習", detail: "間違えた論点を動画で見直し", target: "ふくしま先生の該当回" },
-  { day: 52, phase: 4, topic: "模擬試験②", detail: "本番同様60分", target: "時間計測＋採点" },
-  { day: 53, phase: 4, topic: "模試② 復習", detail: "苦手を潰す", target: "復習重視" },
-  { day: 54, phase: 4, topic: "模擬試験③", detail: "本番同様60分", target: "時間計測＋採点" },
-  { day: 55, phase: 4, topic: "模試③ 復習", detail: "苦手を潰す", target: "復習重視" },
-  { day: 56, phase: 4, topic: "仕訳マラソン", detail: "仕訳を30問一気に解く", target: "反射で解けるレベルに" },
-  { day: 57, phase: 4, topic: "第3問マラソン", detail: "精算表or財務諸表を2枚連打", target: "時間と正確さ" },
-  { day: 58, phase: 4, topic: "最終模試（本番前日前）", detail: "合格点70点以上を目指す", target: "本番モード" },
-  { day: 59, phase: 4, topic: "苦手論点の最終確認", detail: "間違えやすい仕訳をもう一度整理", target: "見直し中心" },
-  { day: 60, phase: 4, topic: "🎉 試験当日", detail: "落ち着いて、今までの積み重ねを出し切る！", target: "合格を勝ち取る 💪" }
+  // ===== Round 1（1周目・Days 1-25）: じっくりインプット =====
+  { day: 1, phase: 1, videos: [1], topic: "【1周目】①入門（簿記の全体像）", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/JGXIB-dJCMM' target='_blank' rel='noopener'>🎥 ①入門（簿記の全体像）</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 2, phase: 1, videos: [2], topic: "【1周目】②現金", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/X6dbaYaahIk' target='_blank' rel='noopener'>🎥 ②現金</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 3, phase: 1, videos: [3], topic: "【1周目】③預金（当座・当座借越・小切手）", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/cYAo2JWSQ0I' target='_blank' rel='noopener'>🎥 ③預金（当座・当座借越・小切手）</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 4, phase: 1, videos: [4], topic: "【1周目】④商品売買（三分法・先入先出・諸掛り）", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/ENBR76dudF0' target='_blank' rel='noopener'>🎥 ④商品売買（三分法・先入先出・諸掛り）</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 5, phase: 1, videos: [5], topic: "【1周目】⑤手形・電子記録債権債務", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/vZJCCpPfi4c' target='_blank' rel='noopener'>🎥 ⑤手形・電子記録債権債務</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 6, phase: 1, videos: [6], topic: "【1周目】⑥固定資産・経費等", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/pCzm5Opi4pU' target='_blank' rel='noopener'>🎥 ⑥固定資産・経費等</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 7, phase: 1, videos: [7], topic: "【1周目】⑦純資産（資本金・繰越利益剰余金）", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/H-eVQo88Guk' target='_blank' rel='noopener'>🎥 ⑦純資産（資本金・繰越利益剰余金）</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 8, phase: 1, videos: [8], topic: "【1周目】⑧決算の全体像", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/QzKBXydLAOA' target='_blank' rel='noopener'>🎥 ⑧決算の全体像</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 9, phase: 1, videos: [9], topic: "【1周目】⑨決算整理1/3（経過勘定・現金過不足・貯蔵品）", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/er8MMhWy6vQ' target='_blank' rel='noopener'>🎥 ⑨決算整理1/3（経過勘定・現金過不足・貯蔵品）</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 10, phase: 1, videos: [10], topic: "【1周目】⑩決算整理2/3（減価償却・貸倒引当金）", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/btACBgyMj7Y' target='_blank' rel='noopener'>🎥 ⑩決算整理2/3（減価償却・貸倒引当金）</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 11, phase: 1, videos: [11], topic: "【1周目】⑪決算整理3/3（しーくりくりしー／売上原価）", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/nICY-XbiXr8' target='_blank' rel='noopener'>🎥 ⑪決算整理3/3（しーくりくりしー／売上原価）</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 12, phase: 1, videos: [12], topic: "【1周目】⑫税金（消費税・法人税等・固定資産税）", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/R7JO7arR4Hs' target='_blank' rel='noopener'>🎥 ⑫税金（消費税・法人税等・固定資産税）</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 13, phase: 1, videos: [13], topic: "【1周目】⑬剰余金の配当", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/gYIvW-O9ZhU' target='_blank' rel='noopener'>🎥 ⑬剰余金の配当</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 14, phase: 1, videos: [14], topic: "【1周目】⑭帳簿（総勘定元帳・補助簿・商品有高帳）", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/S76CI1ztNms' target='_blank' rel='noopener'>🎥 ⑭帳簿（総勘定元帳・補助簿・商品有高帳）</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 15, phase: 1, videos: [15], topic: "【1周目】⑮試算表（合計・残高・合計残高）", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/gQBIHvODJ18' target='_blank' rel='noopener'>🎥 ⑮試算表（合計・残高・合計残高）</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 16, phase: 1, videos: [16], topic: "【1周目】⑯精算表・財務諸表", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/-2H-2ZPpH6Y' target='_blank' rel='noopener'>🎥 ⑯精算表・財務諸表</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 17, phase: 1, videos: [17], topic: "【1周目】⑰勘定記入・帳簿締切", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/mqVdPhliWJ8' target='_blank' rel='noopener'>🎥 ⑰勘定記入・帳簿締切</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 18, phase: 1, videos: [18], topic: "【1周目】⑱総復習問題70問", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/glQvr5d42g0' target='_blank' rel='noopener'>🎥 ⑱総復習問題70問</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 19, phase: 1, videos: [19], topic: "【1周目】⑲減価償却【じっくり】", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/VmKYVvjTJzk' target='_blank' rel='noopener'>🎥 ⑲減価償却【じっくり】</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 20, phase: 1, videos: [20], topic: "【1周目】⑳貸倒引当金【じっくり】", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/WIwDrWL5Rhk' target='_blank' rel='noopener'>🎥 ⑳貸倒引当金【じっくり】</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 21, phase: 1, videos: [21], topic: "【1周目】㉑前払・前受・未払・未収【じっくり】", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/U-sBXKdHJfE' target='_blank' rel='noopener'>🎥 ㉑前払・前受・未払・未収【じっくり】</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 22, phase: 1, videos: [22], topic: "【1周目】㉒消費税【じっくり】", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/4YRjT2O1ZOU' target='_blank' rel='noopener'>🎥 ㉒消費税【じっくり】</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 23, phase: 1, videos: [23], topic: "【1周目】㉓残高試算表・精算表・財務諸表【じっくり】", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/tXfH06C6hSM' target='_blank' rel='noopener'>🎥 ㉓残高試算表・精算表・財務諸表【じっくり】</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 24, phase: 1, videos: [24], topic: "【1周目】㉔本試験レベル問題 第1回", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/ImTtR5gNmx4' target='_blank' rel='noopener'>🎥 ㉔本試験レベル問題 第1回</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  { day: 25, phase: 1, videos: [25], topic: "【1周目】㉕本試験レベル問題 第2回", detail: "動画をじっくり視聴 👉 <a href='https://youtu.be/b_WtQClw6GY' target='_blank' rel='noopener'>🎥 ㉕本試験レベル問題 第2回</a>　／ 視聴後は下の復習仕訳 ＋ 犬簿記で2〜3問", target: "動画視聴＋復習仕訳＋犬簿記" },
+  // ===== Round 2（2周目・Days 26-40）: 定着 =====
+  { day: 26, phase: 2, videos: [1,2], topic: "【2周目】①入門（簿記の全体像） ／ ②現金", detail: "<a href='https://youtu.be/JGXIB-dJCMM' target='_blank' rel='noopener'>🎥 ①入門（簿記の全体像）</a> ／ <a href='https://youtu.be/X6dbaYaahIk' target='_blank' rel='noopener'>🎥 ②現金</a>　／ 倍速OK。視聴後は下の復習仕訳＋仕訳道場の該当分野を反復", target: "2本視聴＋復習仕訳＋仕訳道場" },
+  { day: 27, phase: 2, videos: [3,4], topic: "【2周目】③預金（当座・当座借越・小切手） ／ ④商品売買（三分法・先入先出・諸掛り）", detail: "<a href='https://youtu.be/cYAo2JWSQ0I' target='_blank' rel='noopener'>🎥 ③預金（当座・当座借越・小切手）</a> ／ <a href='https://youtu.be/ENBR76dudF0' target='_blank' rel='noopener'>🎥 ④商品売買（三分法・先入先出・諸掛り）</a>　／ 倍速OK。視聴後は下の復習仕訳＋仕訳道場の該当分野を反復", target: "2本視聴＋復習仕訳＋仕訳道場" },
+  { day: 28, phase: 2, videos: [5,6], topic: "【2周目】⑤手形・電子記録債権債務 ／ ⑥固定資産・経費等", detail: "<a href='https://youtu.be/vZJCCpPfi4c' target='_blank' rel='noopener'>🎥 ⑤手形・電子記録債権債務</a> ／ <a href='https://youtu.be/pCzm5Opi4pU' target='_blank' rel='noopener'>🎥 ⑥固定資産・経費等</a>　／ 倍速OK。視聴後は下の復習仕訳＋仕訳道場の該当分野を反復", target: "2本視聴＋復習仕訳＋仕訳道場" },
+  { day: 29, phase: 2, videos: [7,8], topic: "【2周目】⑦純資産（資本金・繰越利益剰余金） ／ ⑧決算の全体像", detail: "<a href='https://youtu.be/H-eVQo88Guk' target='_blank' rel='noopener'>🎥 ⑦純資産（資本金・繰越利益剰余金）</a> ／ <a href='https://youtu.be/QzKBXydLAOA' target='_blank' rel='noopener'>🎥 ⑧決算の全体像</a>　／ 倍速OK。視聴後は下の復習仕訳＋仕訳道場の該当分野を反復", target: "2本視聴＋復習仕訳＋仕訳道場" },
+  { day: 30, phase: 2, videos: [9,10], topic: "【2周目】⑨決算整理1/3（経過勘定・現金過不足・貯蔵品） ／ ⑩決算整理2/3（減価償却・貸倒引当金）", detail: "<a href='https://youtu.be/er8MMhWy6vQ' target='_blank' rel='noopener'>🎥 ⑨決算整理1/3（経過勘定・現金過不足・貯蔵品）</a> ／ <a href='https://youtu.be/btACBgyMj7Y' target='_blank' rel='noopener'>🎥 ⑩決算整理2/3（減価償却・貸倒引当金）</a>　／ 倍速OK。視聴後は下の復習仕訳＋仕訳道場の該当分野を反復", target: "2本視聴＋復習仕訳＋仕訳道場" },
+  { day: 31, phase: 2, videos: [11,12], topic: "【2周目】⑪決算整理3/3（しーくりくりしー／売上原価） ／ ⑫税金（消費税・法人税等・固定資産税）", detail: "<a href='https://youtu.be/nICY-XbiXr8' target='_blank' rel='noopener'>🎥 ⑪決算整理3/3（しーくりくりしー／売上原価）</a> ／ <a href='https://youtu.be/R7JO7arR4Hs' target='_blank' rel='noopener'>🎥 ⑫税金（消費税・法人税等・固定資産税）</a>　／ 倍速OK。視聴後は下の復習仕訳＋仕訳道場の該当分野を反復", target: "2本視聴＋復習仕訳＋仕訳道場" },
+  { day: 32, phase: 2, videos: [13,14], topic: "【2周目】⑬剰余金の配当 ／ ⑭帳簿（総勘定元帳・補助簿・商品有高帳）", detail: "<a href='https://youtu.be/gYIvW-O9ZhU' target='_blank' rel='noopener'>🎥 ⑬剰余金の配当</a> ／ <a href='https://youtu.be/S76CI1ztNms' target='_blank' rel='noopener'>🎥 ⑭帳簿（総勘定元帳・補助簿・商品有高帳）</a>　／ 倍速OK。視聴後は下の復習仕訳＋仕訳道場の該当分野を反復", target: "2本視聴＋復習仕訳＋仕訳道場" },
+  { day: 33, phase: 2, videos: [15,16], topic: "【2周目】⑮試算表（合計・残高・合計残高） ／ ⑯精算表・財務諸表", detail: "<a href='https://youtu.be/gQBIHvODJ18' target='_blank' rel='noopener'>🎥 ⑮試算表（合計・残高・合計残高）</a> ／ <a href='https://youtu.be/-2H-2ZPpH6Y' target='_blank' rel='noopener'>🎥 ⑯精算表・財務諸表</a>　／ 倍速OK。視聴後は下の復習仕訳＋仕訳道場の該当分野を反復", target: "2本視聴＋復習仕訳＋仕訳道場" },
+  { day: 34, phase: 2, videos: [17,18], topic: "【2周目】⑰勘定記入・帳簿締切 ／ ⑱総復習問題70問", detail: "<a href='https://youtu.be/mqVdPhliWJ8' target='_blank' rel='noopener'>🎥 ⑰勘定記入・帳簿締切</a> ／ <a href='https://youtu.be/glQvr5d42g0' target='_blank' rel='noopener'>🎥 ⑱総復習問題70問</a>　／ 倍速OK。視聴後は下の復習仕訳＋仕訳道場の該当分野を反復", target: "2本視聴＋復習仕訳＋仕訳道場" },
+  { day: 35, phase: 2, videos: [19,20], topic: "【2周目】⑲減価償却【じっくり】 ／ ⑳貸倒引当金【じっくり】", detail: "<a href='https://youtu.be/VmKYVvjTJzk' target='_blank' rel='noopener'>🎥 ⑲減価償却【じっくり】</a> ／ <a href='https://youtu.be/WIwDrWL5Rhk' target='_blank' rel='noopener'>🎥 ⑳貸倒引当金【じっくり】</a>　／ 倍速OK。視聴後は下の復習仕訳＋仕訳道場の該当分野を反復", target: "2本視聴＋復習仕訳＋仕訳道場" },
+  { day: 36, phase: 2, videos: [21], topic: "【2周目】㉑前払・前受・未払・未収【じっくり】", detail: "動画視聴 👉 <a href='https://youtu.be/U-sBXKdHJfE' target='_blank' rel='noopener'>🎥 ㉑前払・前受・未払・未収【じっくり】</a>　／ 視聴後は復習仕訳＋苦手論点の洗い出し", target: "動画視聴＋復習仕訳＋苦手チェック" },
+  { day: 37, phase: 2, videos: [22], topic: "【2周目】㉒消費税【じっくり】", detail: "動画視聴 👉 <a href='https://youtu.be/4YRjT2O1ZOU' target='_blank' rel='noopener'>🎥 ㉒消費税【じっくり】</a>　／ 視聴後は復習仕訳＋苦手論点の洗い出し", target: "動画視聴＋復習仕訳＋苦手チェック" },
+  { day: 38, phase: 2, videos: [23], topic: "【2周目】㉓残高試算表・精算表・財務諸表【じっくり】", detail: "動画視聴 👉 <a href='https://youtu.be/tXfH06C6hSM' target='_blank' rel='noopener'>🎥 ㉓残高試算表・精算表・財務諸表【じっくり】</a>　／ 視聴後は復習仕訳＋苦手論点の洗い出し", target: "動画視聴＋復習仕訳＋苦手チェック" },
+  { day: 39, phase: 2, videos: [24], topic: "【2周目】㉔本試験レベル問題 第1回", detail: "動画視聴 👉 <a href='https://youtu.be/ImTtR5gNmx4' target='_blank' rel='noopener'>🎥 ㉔本試験レベル問題 第1回</a>　／ 視聴後は復習仕訳＋苦手論点の洗い出し", target: "動画視聴＋復習仕訳＋苦手チェック" },
+  { day: 40, phase: 2, videos: [25], topic: "【2周目】㉕本試験レベル問題 第2回", detail: "動画視聴 👉 <a href='https://youtu.be/b_WtQClw6GY' target='_blank' rel='noopener'>🎥 ㉕本試験レベル問題 第2回</a>　／ 視聴後は復習仕訳＋苦手論点の洗い出し", target: "動画視聴＋復習仕訳＋苦手チェック" },
+  // ===== Round 3（3周目・Days 41-55）: 速習・反射 =====
+  { day: 41, phase: 3, videos: [1,2], topic: "【3周目】①入門（簿記の全体像） ／ ②現金", detail: "<a href='https://youtu.be/JGXIB-dJCMM' target='_blank' rel='noopener'>🎥 ①入門（簿記の全体像）</a> ／ <a href='https://youtu.be/X6dbaYaahIk' target='_blank' rel='noopener'>🎥 ②現金</a>　／ 1.5倍速で流し見OK。仕訳道場で反射神経を鍛える", target: "2本速習＋仕訳道場で反射練習" },
+  { day: 42, phase: 3, videos: [3,4], topic: "【3周目】③預金（当座・当座借越・小切手） ／ ④商品売買（三分法・先入先出・諸掛り）", detail: "<a href='https://youtu.be/cYAo2JWSQ0I' target='_blank' rel='noopener'>🎥 ③預金（当座・当座借越・小切手）</a> ／ <a href='https://youtu.be/ENBR76dudF0' target='_blank' rel='noopener'>🎥 ④商品売買（三分法・先入先出・諸掛り）</a>　／ 1.5倍速で流し見OK。仕訳道場で反射神経を鍛える", target: "2本速習＋仕訳道場で反射練習" },
+  { day: 43, phase: 3, videos: [5,6], topic: "【3周目】⑤手形・電子記録債権債務 ／ ⑥固定資産・経費等", detail: "<a href='https://youtu.be/vZJCCpPfi4c' target='_blank' rel='noopener'>🎥 ⑤手形・電子記録債権債務</a> ／ <a href='https://youtu.be/pCzm5Opi4pU' target='_blank' rel='noopener'>🎥 ⑥固定資産・経費等</a>　／ 1.5倍速で流し見OK。仕訳道場で反射神経を鍛える", target: "2本速習＋仕訳道場で反射練習" },
+  { day: 44, phase: 3, videos: [7,8], topic: "【3周目】⑦純資産（資本金・繰越利益剰余金） ／ ⑧決算の全体像", detail: "<a href='https://youtu.be/H-eVQo88Guk' target='_blank' rel='noopener'>🎥 ⑦純資産（資本金・繰越利益剰余金）</a> ／ <a href='https://youtu.be/QzKBXydLAOA' target='_blank' rel='noopener'>🎥 ⑧決算の全体像</a>　／ 1.5倍速で流し見OK。仕訳道場で反射神経を鍛える", target: "2本速習＋仕訳道場で反射練習" },
+  { day: 45, phase: 3, videos: [9,10], topic: "【3周目】⑨決算整理1/3（経過勘定・現金過不足・貯蔵品） ／ ⑩決算整理2/3（減価償却・貸倒引当金）", detail: "<a href='https://youtu.be/er8MMhWy6vQ' target='_blank' rel='noopener'>🎥 ⑨決算整理1/3（経過勘定・現金過不足・貯蔵品）</a> ／ <a href='https://youtu.be/btACBgyMj7Y' target='_blank' rel='noopener'>🎥 ⑩決算整理2/3（減価償却・貸倒引当金）</a>　／ 1.5倍速で流し見OK。仕訳道場で反射神経を鍛える", target: "2本速習＋仕訳道場で反射練習" },
+  { day: 46, phase: 3, videos: [11,12], topic: "【3周目】⑪決算整理3/3（しーくりくりしー／売上原価） ／ ⑫税金（消費税・法人税等・固定資産税）", detail: "<a href='https://youtu.be/nICY-XbiXr8' target='_blank' rel='noopener'>🎥 ⑪決算整理3/3（しーくりくりしー／売上原価）</a> ／ <a href='https://youtu.be/R7JO7arR4Hs' target='_blank' rel='noopener'>🎥 ⑫税金（消費税・法人税等・固定資産税）</a>　／ 1.5倍速で流し見OK。仕訳道場で反射神経を鍛える", target: "2本速習＋仕訳道場で反射練習" },
+  { day: 47, phase: 3, videos: [13,14], topic: "【3周目】⑬剰余金の配当 ／ ⑭帳簿（総勘定元帳・補助簿・商品有高帳）", detail: "<a href='https://youtu.be/gYIvW-O9ZhU' target='_blank' rel='noopener'>🎥 ⑬剰余金の配当</a> ／ <a href='https://youtu.be/S76CI1ztNms' target='_blank' rel='noopener'>🎥 ⑭帳簿（総勘定元帳・補助簿・商品有高帳）</a>　／ 1.5倍速で流し見OK。仕訳道場で反射神経を鍛える", target: "2本速習＋仕訳道場で反射練習" },
+  { day: 48, phase: 3, videos: [15,16], topic: "【3周目】⑮試算表（合計・残高・合計残高） ／ ⑯精算表・財務諸表", detail: "<a href='https://youtu.be/gQBIHvODJ18' target='_blank' rel='noopener'>🎥 ⑮試算表（合計・残高・合計残高）</a> ／ <a href='https://youtu.be/-2H-2ZPpH6Y' target='_blank' rel='noopener'>🎥 ⑯精算表・財務諸表</a>　／ 1.5倍速で流し見OK。仕訳道場で反射神経を鍛える", target: "2本速習＋仕訳道場で反射練習" },
+  { day: 49, phase: 3, videos: [17,18], topic: "【3周目】⑰勘定記入・帳簿締切 ／ ⑱総復習問題70問", detail: "<a href='https://youtu.be/mqVdPhliWJ8' target='_blank' rel='noopener'>🎥 ⑰勘定記入・帳簿締切</a> ／ <a href='https://youtu.be/glQvr5d42g0' target='_blank' rel='noopener'>🎥 ⑱総復習問題70問</a>　／ 1.5倍速で流し見OK。仕訳道場で反射神経を鍛える", target: "2本速習＋仕訳道場で反射練習" },
+  { day: 50, phase: 3, videos: [19,20], topic: "【3周目】⑲減価償却【じっくり】 ／ ⑳貸倒引当金【じっくり】", detail: "<a href='https://youtu.be/VmKYVvjTJzk' target='_blank' rel='noopener'>🎥 ⑲減価償却【じっくり】</a> ／ <a href='https://youtu.be/WIwDrWL5Rhk' target='_blank' rel='noopener'>🎥 ⑳貸倒引当金【じっくり】</a>　／ 1.5倍速で流し見OK。仕訳道場で反射神経を鍛える", target: "2本速習＋仕訳道場で反射練習" },
+  { day: 51, phase: 3, videos: [21], topic: "【3周目】㉑前払・前受・未払・未収【じっくり】", detail: "動画視聴（1.5倍速OK） 👉 <a href='https://youtu.be/U-sBXKdHJfE' target='_blank' rel='noopener'>🎥 ㉑前払・前受・未払・未収【じっくり】</a>　／ 本試験レベル問題で仕上げ", target: "動画＋本試験レベル演習" },
+  { day: 52, phase: 3, videos: [22], topic: "【3周目】㉒消費税【じっくり】", detail: "動画視聴（1.5倍速OK） 👉 <a href='https://youtu.be/4YRjT2O1ZOU' target='_blank' rel='noopener'>🎥 ㉒消費税【じっくり】</a>　／ 本試験レベル問題で仕上げ", target: "動画＋本試験レベル演習" },
+  { day: 53, phase: 3, videos: [23], topic: "【3周目】㉓残高試算表・精算表・財務諸表【じっくり】", detail: "動画視聴（1.5倍速OK） 👉 <a href='https://youtu.be/tXfH06C6hSM' target='_blank' rel='noopener'>🎥 ㉓残高試算表・精算表・財務諸表【じっくり】</a>　／ 本試験レベル問題で仕上げ", target: "動画＋本試験レベル演習" },
+  { day: 54, phase: 3, videos: [24], topic: "【3周目】㉔本試験レベル問題 第1回", detail: "動画視聴（1.5倍速OK） 👉 <a href='https://youtu.be/ImTtR5gNmx4' target='_blank' rel='noopener'>🎥 ㉔本試験レベル問題 第1回</a>　／ 本試験レベル問題で仕上げ", target: "動画＋本試験レベル演習" },
+  { day: 55, phase: 3, videos: [25], topic: "【3周目】㉕本試験レベル問題 第2回", detail: "動画視聴（1.5倍速OK） 👉 <a href='https://youtu.be/b_WtQClw6GY' target='_blank' rel='noopener'>🎥 ㉕本試験レベル問題 第2回</a>　／ 本試験レベル問題で仕上げ", target: "動画＋本試験レベル演習" },
+  // ===== Phase 4（Days 56-60）: 模試＋試験当日 =====
+  { day: 56, phase: 4, videos: [], topic: "模擬試験①（本番同様60分）", detail: "犬簿記 または ふくしま先生の本試験レベル問題を60分で通し解き", target: "時間計測＋採点" },
+  { day: 57, phase: 4, videos: [], topic: "模試① 復習", detail: "間違えた論点をふくしま動画＋仕訳道場で再確認", target: "苦手を全て潰す" },
+  { day: 58, phase: 4, videos: [], topic: "模擬試験②（本番同様60分）", detail: "別の予想問題セットで本番モード", target: "時間計測＋採点（70点以上目標）" },
+  { day: 59, phase: 4, videos: [], topic: "最終確認・弱点整理", detail: "苦手仕訳パターンを仕訳道場で総ざらい／計算ミスの癖を言語化", target: "落ち着いて当日を迎える準備" },
+  { day: 60, phase: 4, videos: [], topic: "🎉 試験当日", detail: "落ち着いて、今までの積み重ねを出し切る！朝は軽めの仕訳1問眺める程度に", target: "合格を勝ち取る 💪" }
 ];
 
 const QUOTES = [
@@ -620,78 +617,135 @@ const QUOTES = [
   "「手を動かした分だけ、脳に残る」"
 ];
 
-/* ========= 動画視聴後の「今日の復習仕訳」========= */
-const REVIEW_PROBLEMS = {
-  1: [ // ⑲減価償却
-    { q: "建物¥1,200,000を取得し、代金は現金で支払った。", a: "(借) 建物 1,200,000 ／ (貸) 現金 1,200,000" },
-    { q: "決算において、建物¥1,200,000を定額法（耐用年数20年・残存価額ゼロ・間接法）で減価償却する。", a: "(借) 減価償却費 60,000 ／ (貸) 建物減価償却累計額 60,000" },
-    { q: "期首に備品（取得原価¥300,000、期首減価償却累計額¥120,000）を¥150,000で売却し、現金で受け取った。", a: "(借) 現金 150,000・備品減価償却累計額 120,000・固定資産売却損 30,000 ／ (貸) 備品 300,000" }
+/* ========= 動画番号別の復習仕訳 ========= */
+const REVIEW_PROBLEMS_BY_VIDEO = {
+  1: [
+    { q: "簿記の5要素を答えよ。", a: "資産・負債・純資産・収益・費用" },
+    { q: "借方と貸方、どちらが左でどちらが右か。", a: "借方が左／貸方が右。略称は「借は左、貸は右」" },
+    { q: "資産・費用が増えたときの仕訳位置は？", a: "借方（左側）に記入" }
   ],
-  4: [ // ⑳貸倒引当金
-    { q: "売掛金期末残高¥2,000,000に対し2%の貸倒引当金を差額補充法で設定する。引当金残高¥20,000。", a: "(借) 貸倒引当金繰入 20,000 ／ (貸) 貸倒引当金 20,000" },
-    { q: "前期発生の売掛金¥30,000が貸倒れた。貸倒引当金の残高は¥50,000。", a: "(借) 貸倒引当金 30,000 ／ (貸) 売掛金 30,000" },
-    { q: "当期発生の売掛金¥40,000が貸倒れた。", a: "(借) 貸倒損失 40,000 ／ (貸) 売掛金 40,000" },
-    { q: "前期に貸倒処理した売掛金¥25,000を当期に現金で回収した。", a: "(借) 現金 25,000 ／ (貸) 償却債権取立益 25,000" }
+  2: [
+    { q: "商品¥50,000を現金で売上げた。", a: "(借) 現金 50,000 ／ (貸) 売上 50,000" },
+    { q: "給料¥200,000を現金で支払った。", a: "(借) 給料 200,000 ／ (貸) 現金 200,000" },
+    { q: "決算日、現金の実際有高が帳簿より¥3,000多かった（原因不明）。", a: "(借) 現金 3,000 ／ (貸) 現金過不足 3,000" }
   ],
-  8: [ // ㉑経過勘定
+  3: [
+    { q: "現金¥100,000を当座預金に預け入れた。", a: "(借) 当座預金 100,000 ／ (貸) 現金 100,000" },
+    { q: "買掛金¥80,000を小切手を振出して支払った。", a: "(借) 買掛金 80,000 ／ (貸) 当座預金 80,000" },
+    { q: "決算時、当座預金が貸方残高¥50,000（当座借越）となっている場合の振替仕訳。", a: "(借) 当座預金 50,000 ／ (貸) 当座借越 50,000" }
+  ],
+  4: [
+    { q: "商品¥60,000を掛で仕入れ、引取運賃¥2,000を現金で支払った（三分法）。", a: "(借) 仕入 62,000 ／ (貸) 買掛金 60,000・現金 2,000" },
+    { q: "商品¥100,000を掛で売上げ、発送費¥3,000を現金で支払った（当社負担）。", a: "(借) 売掛金 100,000・発送費 3,000 ／ (貸) 売上 100,000・現金 3,000" },
+    { q: "クレジットカードで商品¥50,000を売上げ（手数料5％）。", a: "(借) クレジット売掛金 47,500・支払手数料 2,500 ／ (貸) 売上 50,000" }
+  ],
+  5: [
+    { q: "商品¥150,000を仕入れ、約束手形を振り出した。", a: "(借) 仕入 150,000 ／ (貸) 支払手形 150,000" },
+    { q: "受取手形¥200,000が満期となり、当座預金で回収。", a: "(借) 当座預金 200,000 ／ (貸) 受取手形 200,000" },
+    { q: "電子記録債権¥100,000を発生させた（売掛金から振替）。", a: "(借) 電子記録債権 100,000 ／ (貸) 売掛金 100,000" }
+  ],
+  6: [
+    { q: "備品¥500,000を購入し、据付費¥20,000と合わせて現金で支払った。", a: "(借) 備品 520,000 ／ (貸) 現金 520,000" },
+    { q: "通信費¥5,000を現金で支払った。", a: "(借) 通信費 5,000 ／ (貸) 現金 5,000" },
+    { q: "従業員への仮払金¥30,000を現金で渡した。", a: "(借) 仮払金 30,000 ／ (貸) 現金 30,000" }
+  ],
+  7: [
+    { q: "会社設立時、株式を発行し現金¥1,000,000を受け取った。", a: "(借) 現金 1,000,000 ／ (貸) 資本金 1,000,000" },
+    { q: "増資により株式を発行、当座預金¥500,000が入金。", a: "(借) 当座預金 500,000 ／ (貸) 資本金 500,000" },
+    { q: "決算で当期純利益¥200,000を繰越利益剰余金に振替。", a: "(借) 損益 200,000 ／ (貸) 繰越利益剰余金 200,000" }
+  ],
+  8: [
+    { q: "決算の手続きを3つの大きな段階に分けると？", a: "①決算予備手続（試算表作成・棚卸） ②決算本手続（決算整理・財務諸表作成） ③決算後手続（帳簿締切）" },
+    { q: "決算整理仕訳の代表的な5項目を挙げよ。", a: "①売上原価計算 ②減価償却 ③貸倒引当金 ④経過勘定 ⑤現金過不足処理" },
+    { q: "損益勘定への振替の目的は？", a: "収益・費用の各勘定を損益に集めて当期純利益を計算するため" }
+  ],
+  9: [
     { q: "決算で保険料¥60,000のうち¥20,000が次期分と判明。", a: "(借) 前払保険料 20,000 ／ (貸) 保険料 20,000" },
     { q: "決算で給料の未払分¥50,000を計上。", a: "(借) 給料 50,000 ／ (貸) 未払給料 50,000" },
+    { q: "決算で現金過不足¥3,000（不足・原因不明）を雑損に振替。", a: "(借) 雑損 3,000 ／ (貸) 現金過不足 3,000" },
+    { q: "決算で未使用の郵便切手¥800を貯蔵品に振替。", a: "(借) 貯蔵品 800 ／ (貸) 通信費 800" }
+  ],
+  10: [
+    { q: "建物¥1,200,000を定額法（耐用20年・残存ゼロ・間接法）で減価償却。", a: "(借) 減価償却費 60,000 ／ (貸) 建物減価償却累計額 60,000" },
+    { q: "売掛金期末残高¥2,000,000に2%の貸倒引当金を差額補充法で設定（残高¥20,000）。", a: "(借) 貸倒引当金繰入 20,000 ／ (貸) 貸倒引当金 20,000" },
+    { q: "期首に備品（取得¥300,000・累計額¥120,000）を¥150,000で売却。現金受取。", a: "(借) 現金 150,000・備品減価償却累計額 120,000・固定資産売却損 30,000 ／ (貸) 備品 300,000" }
+  ],
+  11: [
+    { q: "決算で売上原価を仕入勘定で算定（期首商品¥100,000、期末商品¥120,000）。", a: "(借) 仕入 100,000 ／ (貸) 繰越商品 100,000　(借) 繰越商品 120,000 ／ (貸) 仕入 120,000" },
+    { q: "売上原価を「売上原価」勘定で算定する方法の決算整理仕訳。", a: "(借) 売上原価 100,000 ／ (貸) 繰越商品 100,000　(借) 売上原価 XXX ／ (貸) 仕入 XXX　(借) 繰越商品 120,000 ／ (貸) 売上原価 120,000" },
+    { q: "「しーくりくりしー」の語呂合わせの意味は？", a: "仕入→繰越商品、繰越商品→仕入の2段階振替で売上原価を算定すること" }
+  ],
+  12: [
+    { q: "現金¥110,000で商品（税抜¥100,000／消費税10%）を仕入（税抜方式）。", a: "(借) 仕入 100,000・仮払消費税 10,000 ／ (貸) 現金 110,000" },
+    { q: "固定資産税¥40,000を現金で納付。", a: "(借) 租税公課 40,000 ／ (貸) 現金 40,000" },
+    { q: "決算で法人税等¥150,000を計上（仮払法人税等¥80,000あり）。", a: "(借) 法人税、住民税及び事業税 150,000 ／ (貸) 仮払法人税等 80,000・未払法人税等 70,000" }
+  ],
+  13: [
+    { q: "株主総会で繰越利益剰余金から配当¥300,000、利益準備金¥30,000を計上。", a: "(借) 繰越利益剰余金 330,000 ／ (貸) 未払配当金 300,000・利益準備金 30,000" },
+    { q: "配当金¥300,000を当座預金から支払った。", a: "(借) 未払配当金 300,000 ／ (貸) 当座預金 300,000" },
+    { q: "利益準備金はいつ積み立てる？", a: "配当額の10分の1を、資本金の4分の1に達するまで積み立てる（会社法）" }
+  ],
+  14: [
+    { q: "商品有高帳の「先入先出法」とは？", a: "先に仕入れた商品から先に払出すと仮定して単価計算する方法" },
+    { q: "売上帳・仕入帳・売掛金元帳・買掛金元帳のうち、補助元帳はどれ？", a: "売掛金元帳・買掛金元帳（得意先・仕入先別の内訳）。売上帳・仕入帳は補助記入帳" },
+    { q: "総勘定元帳と補助簿の関係は？", a: "総勘定元帳は全ての取引の集計、補助簿は特定の勘定や取引の詳細を補足する" }
+  ],
+  15: [
+    { q: "残高試算表の貸借が一致しなかった。原因究明のチェックポイントを3つ。", a: "① 転記ミス（貸借を逆）　② 金額の書き違い　③ 仕訳そのものが未転記／重複転記" },
+    { q: "合計試算表と残高試算表の違いは？", a: "合計試算表は借方合計・貸方合計をそれぞれ示す。残高試算表は差額の残高のみ示す" },
+    { q: "合計残高試算表は何を表示する？", a: "借方合計・借方残高・勘定科目・貸方残高・貸方合計の5列（合計と残高の両方）" }
+  ],
+  16: [
+    { q: "精算表の修正記入欄で「売上原価計算」の仕訳はどう記入？", a: "(借) 仕入 期首 ／ (貸) 繰越商品 期首　(借) 繰越商品 期末 ／ (貸) 仕入 期末" },
+    { q: "当期純利益を精算表でどう表記するか。", a: "損益計算書欄の借方に「当期純利益」として差額記入、貸借対照表欄の貸方にも同額記入" },
+    { q: "貸借対照表の繰越利益剰余金の計算式。", a: "期首繰越利益剰余金 ＋ 当期純利益 ＝ 期末繰越利益剰余金" }
+  ],
+  17: [
+    { q: "決算で売上勘定（¥500,000）を損益勘定に振替。", a: "(借) 売上 500,000 ／ (貸) 損益 500,000" },
+    { q: "決算で仕入勘定（¥300,000）を損益勘定に振替。", a: "(借) 損益 300,000 ／ (貸) 仕入 300,000" },
+    { q: "期首の再振替仕訳（前期末に計上した前払保険料¥20,000）。", a: "(借) 保険料 20,000 ／ (貸) 前払保険料 20,000" }
+  ],
+  18: [
+    { q: "小口現金から交通費¥800、通信費¥500を支払った報告後、同額を補給（定額資金前渡法）。", a: "(借) 交通費 800・通信費 500 ／ (貸) 小口現金 1,300　(借) 小口現金 1,300 ／ (貸) 現金 1,300" },
+    { q: "約束手形¥100,000を振出して商品を仕入。", a: "(借) 仕入 100,000 ／ (貸) 支払手形 100,000" },
+    { q: "受取手形¥200,000を銀行で割引。割引料¥3,000差引後の残額が当座預金へ。", a: "(借) 当座預金 197,000・手形売却損 3,000 ／ (貸) 受取手形 200,000" }
+  ],
+  19: [
+    { q: "期中（7月1日）に取得した備品¥600,000を定額法（耐用5年・残存ゼロ・間接法）で決算（3月末）。", a: "(借) 減価償却費 90,000 ／ (貸) 備品減価償却累計額 90,000（600,000÷5×9/12）" },
+    { q: "取得原価¥400,000・累計額¥320,000の備品を¥50,000で売却、現金受取。", a: "(借) 現金 50,000・備品減価償却累計額 320,000・固定資産売却損 30,000 ／ (貸) 備品 400,000" },
+    { q: "取得原価¥500,000・累計額¥499,999の備品を廃棄（備忘価額1円）。", a: "(借) 備品減価償却累計額 499,999・固定資産除却損 1 ／ (貸) 備品 500,000" }
+  ],
+  20: [
+    { q: "売掛金期末¥2,000,000に2%の貸倒引当金を差額補充法（残高¥20,000）。", a: "(借) 貸倒引当金繰入 20,000 ／ (貸) 貸倒引当金 20,000" },
+    { q: "前期発生の売掛金¥30,000が貸倒。引当金残高¥50,000。", a: "(借) 貸倒引当金 30,000 ／ (貸) 売掛金 30,000" },
+    { q: "当期発生の売掛金¥40,000が貸倒。", a: "(借) 貸倒損失 40,000 ／ (貸) 売掛金 40,000" },
+    { q: "前期に貸倒処理した売掛金¥25,000を現金で回収。", a: "(借) 現金 25,000 ／ (貸) 償却債権取立益 25,000" }
+  ],
+  21: [
+    { q: "決算で保険料¥60,000のうち¥20,000が次期分。", a: "(借) 前払保険料 20,000 ／ (貸) 保険料 20,000" },
+    { q: "決算で給料の未払分¥50,000を計上。", a: "(借) 給料 50,000 ／ (貸) 未払給料 50,000" },
     { q: "決算で利息の未収分¥5,000を計上。", a: "(借) 未収利息 5,000 ／ (貸) 受取利息 5,000" },
-    { q: "決算で受取家賃¥120,000のうち¥40,000が次期分と判明。", a: "(借) 受取家賃 40,000 ／ (貸) 前受家賃 40,000" }
+    { q: "決算で受取家賃¥120,000のうち¥40,000が次期分。", a: "(借) 受取家賃 40,000 ／ (貸) 前受家賃 40,000" }
   ],
-  15: [ // ⑮伝票
-    { q: "商品¥50,000を掛で仕入れ、うち¥20,000を現金で支払った（取引を分割する方法）", a: "出金伝票: (借) 仕入 20,000 ／ (貸) 現金 20,000　振替伝票: (借) 仕入 30,000 ／ (貸) 買掛金 30,000" },
-    { q: "同取引を「いったん全額掛→一部返金」で処理する方法", a: "振替伝票: (借) 仕入 50,000 ／ (貸) 買掛金 50,000　出金伝票: (借) 買掛金 20,000 ／ (貸) 現金 20,000" },
-    { q: "現金¥10,000を当座預金に預け入れた。3伝票制で起票。", a: "出金伝票: (借) 当座預金 10,000 ／ (貸) 現金 10,000" }
+  22: [
+    { q: "商品¥100,000（税抜）を仕入、消費税10%を含めて現金支払（税抜方式）。", a: "(借) 仕入 100,000・仮払消費税 10,000 ／ (貸) 現金 110,000" },
+    { q: "商品¥200,000（税抜）を売上、消費税10%を含めて掛け（税抜方式）。", a: "(借) 売掛金 220,000 ／ (貸) 売上 200,000・仮受消費税 20,000" },
+    { q: "決算で仮払消費税¥10,000と仮受消費税¥20,000を相殺し未払分計上。", a: "(借) 仮受消費税 20,000 ／ (貸) 仮払消費税 10,000・未払消費税 10,000" }
   ],
-  18: [ // ⑯精算表
-    { q: "売上原価を計算する決算整理仕訳（期首商品¥100,000、期末商品¥120,000）", a: "(借) 仕入 100,000 ／ (貸) 繰越商品 100,000　(借) 繰越商品 120,000 ／ (貸) 仕入 120,000" },
-    { q: "備品（取得原価¥500,000、残存価額ゼロ、耐用年数5年、定額法、間接法）の決算整理", a: "(借) 減価償却費 100,000 ／ (貸) 備品減価償却累計額 100,000" },
-    { q: "売掛金期末残高¥1,500,000に2%の貸倒引当金（残高¥10,000）", a: "(借) 貸倒引当金繰入 20,000 ／ (貸) 貸倒引当金 20,000" }
+  23: [
+    { q: "残高試算表の貸借不一致の原因究明ポイント3つ。", a: "① 転記ミス　② 金額の書き違い　③ 仕訳の未転記／重複転記" },
+    { q: "精算表の「決算整理」列で減価償却を書く場所は？", a: "借方：減価償却費／貸方：減価償却累計額" },
+    { q: "B/Sの資産の部に計上される主な科目を5つ。", a: "現金・当座預金・売掛金・商品・建物/備品（−減価償却累計額）" }
   ],
-  21: [ // ⑰勘定記入
-    { q: "決算で売上勘定（¥500,000）を損益勘定に振替える。", a: "(借) 売上 500,000 ／ (貸) 損益 500,000" },
-    { q: "決算で仕入勘定（¥300,000）を損益勘定に振替える。", a: "(借) 損益 300,000 ／ (貸) 仕入 300,000" },
-    { q: "損益勘定で算定した当期純利益¥150,000を繰越利益剰余金に振替える。", a: "(借) 損益 150,000 ／ (貸) 繰越利益剰余金 150,000" },
-    { q: "期首の再振替仕訳（前期末に計上した前払保険料¥20,000）", a: "(借) 保険料 20,000 ／ (貸) 前払保険料 20,000" }
+  24: [
+    { q: "商品¥100,000を掛で売上。", a: "(借) 売掛金 100,000 ／ (貸) 売上 100,000" },
+    { q: "商品¥50,000を現金仕入、引取運賃¥2,000も現金支払。", a: "(借) 仕入 52,000 ／ (貸) 現金 52,000" },
+    { q: "得意先倒産、前期発生の売掛金¥80,000貸倒。引当金残高¥50,000。", a: "(借) 貸倒引当金 50,000・貸倒損失 30,000 ／ (貸) 売掛金 80,000" }
   ],
-  23: [ // ㉓じっくり残高・精算・財務諸表
-    { q: "残高試算表の貸借が一致しなかった。原因究明のチェックポイントを3つ挙げよ。", a: "① 転記ミス（貸借を逆）　② 金額の書き違い　③ 仕訳そのものが未転記／重複転記" },
-    { q: "当期純利益を精算表でどう表記するか（借方合計＜貸方合計の損益計算書欄で）", a: "損益計算書欄の借方に「当期純利益」として差額を記入し、貸借対照表欄の貸方にも同額を記入（利益剰余金の増加）" },
-    { q: "貸借対照表の繰越利益剰余金の計算式", a: "期首繰越利益剰余金 ＋ 当期純利益 ＝ 期末繰越利益剰余金" }
-  ],
-  29: [ // ㉒社会保険
-    { q: "給料¥300,000から健康保険料¥15,000、厚生年金¥27,000、源泉所得税¥10,000を控除し、残額を現金で支給。", a: "(借) 給料 300,000 ／ (貸) 現金 248,000・預り金 52,000" },
-    { q: "預り金の社会保険料¥42,000と会社負担分¥42,000を現金で納付。", a: "(借) 預り金 42,000・法定福利費 42,000 ／ (貸) 現金 84,000" },
-    { q: "預り金の源泉所得税¥10,000を現金で納付。", a: "(借) 預り金 10,000 ／ (貸) 現金 10,000" }
-  ],
-  31: [ // ㉕発展論点
-    { q: "資本的支出：建物の改良工事¥300,000を現金で支払った（価値が増加）", a: "(借) 建物 300,000 ／ (貸) 現金 300,000" },
-    { q: "収益的支出：建物の通常の修繕¥50,000を現金で支払った", a: "(借) 修繕費 50,000 ／ (貸) 現金 50,000" },
-    { q: "備忘価額1円：取得原価¥100,000・累計額¥99,999の備品を廃棄（売却価額ゼロ）", a: "(借) 備品減価償却累計額 99,999・固定資産除却損 1 ／ (貸) 備品 100,000" },
-    { q: "訂正仕訳：誤って仕入¥10,000を売上として記帳していた場合", a: "逆仕訳: (借) 売上 10,000 ／ (貸) 仕入 10,000 に加え、正しい仕訳 (借) 仕入 10,000 ／ (貸) 買掛金等 10,000" }
-  ],
-  35: [ // ⑱総復習1/3
-    { q: "現金過不足（決算時、原因不明の不足¥3,000）を雑損に振替える。", a: "(借) 雑損 3,000 ／ (貸) 現金過不足 3,000" },
-    { q: "小口現金から交通費¥800、通信費¥500を支払った報告を受け、同額を補給。", a: "(借) 交通費 800・通信費 500 ／ (貸) 小口現金 1,300　(借) 小口現金 1,300 ／ (貸) 現金 1,300" }
-  ],
-  36: [ // ⑱総復習2/3
-    { q: "約束手形¥100,000を振り出し、商品を仕入れた。", a: "(借) 仕入 100,000 ／ (貸) 支払手形 100,000" },
-    { q: "受取手形¥200,000を銀行で割引き、割引料¥3,000差引後の残額が当座預金へ。", a: "(借) 当座預金 197,000・手形売却損 3,000 ／ (貸) 受取手形 200,000" }
-  ],
-  37: [ // ⑱総復習3/3
-    { q: "決算で売上原価を仕入勘定で算定（期首¥50,000・期末¥70,000）", a: "(借) 仕入 50,000 ／ (貸) 繰越商品 50,000　(借) 繰越商品 70,000 ／ (貸) 仕入 70,000" },
-    { q: "当座借越¥80,000を決算時に当座借越勘定（または短期借入金）へ振替える。", a: "(借) 当座預金 80,000 ／ (貸) 当座借越 80,000" }
-  ],
-  43: [ // ㉔本試験1/2
-    { q: "商品¥100,000を掛で売上げた。", a: "(借) 売掛金 100,000 ／ (貸) 売上 100,000" },
-    { q: "商品¥50,000を現金で仕入れ、引取運賃¥2,000も現金で支払った。", a: "(借) 仕入 52,000 ／ (貸) 現金 52,000" },
-    { q: "得意先が倒産し、前期発生の売掛金¥80,000が貸倒れた。引当金残高¥50,000。", a: "(借) 貸倒引当金 50,000・貸倒損失 30,000 ／ (貸) 売掛金 80,000" }
-  ],
-  44: [ // ㉔本試験2/2
-    { q: "決算で売掛金¥500,000に2%の貸倒引当金を設定（残高¥4,000）", a: "(借) 貸倒引当金繰入 6,000 ／ (貸) 貸倒引当金 6,000" },
-    { q: "決算で備品（取得¥400,000、耐用年数5年、定額法、間接法、期中取得の8ヶ月経過分）", a: "(借) 減価償却費 53,333 ／ (貸) 備品減価償却累計額 53,333（400,000÷5×8/12）" },
-    { q: "決算で保険料の前払分¥15,000を振替える。", a: "(借) 前払保険料 15,000 ／ (貸) 保険料 15,000" }
+  25: [
+    { q: "決算で売掛金¥500,000に2%の貸倒引当金を設定（残高¥4,000）。", a: "(借) 貸倒引当金繰入 6,000 ／ (貸) 貸倒引当金 6,000" },
+    { q: "決算で備品（取得¥400,000・耐用5年・定額法・間接法・期中8ヶ月経過）。", a: "(借) 減価償却費 53,333 ／ (貸) 備品減価償却累計額 53,333（400,000÷5×8/12）" },
+    { q: "決算で保険料の前払分¥15,000を振替。", a: "(借) 前払保険料 15,000 ／ (貸) 保険料 15,000" }
   ]
 };
 
@@ -729,6 +783,9 @@ const VIDEO_LIBRARY = [
     { n: "㉕", title: "本試験レベル問題 第2回", id: "b_WtQClw6GY" }
   ]}
 ];
+
+// 1〜25の番号でアクセスできるフラットな動画参照
+const VIDEO_LIBRARY_FLAT = VIDEO_LIBRARY.flatMap(g => g.videos).map(v => ({ jp: v.n, title: v.title, id: v.id }));
 
 /* ========= 仕訳道場（分野別仕訳問題） ========= */
 const SHIKKEN_DOJO = [
@@ -1188,22 +1245,32 @@ function renderToday() {
   } else {
     actionsHtml = `<div style="font-size:0.88rem;color:var(--muted);">${isDone ? '✅ 今日のタスクは完了済みです' : '⏳ まだ今日の分は終わっていません'}</div>`;
   }
-  // 動画日には「今日の復習仕訳」を表示
-  const problems = REVIEW_PROBLEMS[todayDay];
+  // 今日見る動画番号リストに応じて復習仕訳を表示（動画ごとにセクション化）
   let reviewHtml = '';
-  if (problems && problems.length) {
-    reviewHtml = `<details style="margin-top:14px;border:1px solid var(--border);border-radius:8px;padding:8px 12px;background:#fafcf7;">
-      <summary style="cursor:pointer;font-weight:700;color:var(--primary);">📝 今日の復習仕訳（動画を見た後に）— 全${problems.length}問</summary>
-      <ol style="margin:12px 0 4px;padding-left:24px;">`;
-    problems.forEach((p, i) => {
-      reviewHtml += `<li style="margin-bottom:14px;line-height:1.6;">
-        <div style="margin-bottom:4px;">${escapeHtml(p.q)}</div>
-        <details><summary style="cursor:pointer;color:var(--accent);font-size:0.9rem;">答えを見る</summary>
-          <div style="margin-top:6px;padding:8px 10px;background:#f5f9f5;border-left:3px solid var(--primary);border-radius:4px;font-size:0.92rem;">${escapeHtml(p.a)}</div>
-        </details>
-      </li>`;
+  const videos = Array.isArray(plan.videos) ? plan.videos : [];
+  const videoSections = videos
+    .map(n => ({ n, probs: REVIEW_PROBLEMS_BY_VIDEO[n] }))
+    .filter(s => s.probs && s.probs.length);
+  if (videoSections.length) {
+    const totalQ = videoSections.reduce((s, v) => s + v.probs.length, 0);
+    reviewHtml = `<details open style="margin-top:14px;border:1px solid var(--border);border-radius:8px;padding:8px 12px;background:#fafcf7;">
+      <summary style="cursor:pointer;font-weight:700;color:var(--primary);">📝 今日の復習仕訳（動画を見た後に）— 全${totalQ}問</summary>`;
+    videoSections.forEach(sec => {
+      const v = VIDEO_LIBRARY_FLAT[sec.n - 1];
+      const label = v ? `${v.jp}${v.title}` : `動画${sec.n}`;
+      reviewHtml += `<div style="margin-top:10px;"><div style="font-weight:600;color:var(--accent);margin:6px 0;">▼ ${escapeHtml(label)}（${sec.probs.length}問）</div>
+        <ol style="margin:6px 0 4px;padding-left:24px;">`;
+      sec.probs.forEach(p => {
+        reviewHtml += `<li style="margin-bottom:12px;line-height:1.6;">
+          <div style="margin-bottom:4px;">${escapeHtml(p.q)}</div>
+          <details><summary style="cursor:pointer;color:var(--accent);font-size:0.9rem;">答えを見る</summary>
+            <div style="margin-top:6px;padding:8px 10px;background:#f5f9f5;border-left:3px solid var(--primary);border-radius:4px;font-size:0.92rem;">${escapeHtml(p.a)}</div>
+          </details>
+        </li>`;
+      });
+      reviewHtml += `</ol></div>`;
     });
-    reviewHtml += `</ol></details>`;
+    reviewHtml += `</details>`;
   }
   box.innerHTML = `
     <div class="today-title">Day ${plan.day} / Phase ${plan.phase}　${plan.topic}</div>
